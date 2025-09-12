@@ -694,6 +694,26 @@
         }
 
         /* Responsive Design */
+        /* Mobile Menu Active State */
+        @media (max-width: 992px) {
+            nav.active {
+                display: flex;
+                flex-direction: column;
+                position: absolute;
+                top: 70px;
+                right: 20px;
+                background: rgba(255, 255, 255, 0.95);
+                padding: 1rem;
+                border-radius: var(--radius);
+                box-shadow: var(--shadow);
+                gap: 1rem;
+            }
+            
+            nav a {
+                padding: 0.75rem 1rem;
+            }
+        }
+
         @media (max-width: 992px) {
             .hero-content {
                 grid-template-columns: 1fr;
@@ -725,9 +745,14 @@
             .hero-text h2 {
                 font-size: 2.5rem;
             }
+
+            .hero-image {
+                height: 300px;
+            }
             
-            .mission-grid, .features-grid, .meditation-grid, .stories-grid, .music-grid {
+            .mission-grid, .journal-container, .features-grid, .meditation-grid, .stories-grid, .music-grid {
                 grid-template-columns: 1fr;
+                gap: 1.5rem;
             }
             
             .footer-container {
@@ -736,6 +761,35 @@
             
             .message {
                 max-width: 90%;
+            }
+
+            @media (max-width: 768px) {
+                .chat-container {
+                    height: 400px;
+                }
+            }
+        }
+        
+
+        @media (max-width: 480px) {
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .emergency-btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.85rem;
+            }
+        }
+        
+        /* Adjust Emergency Button on Small Screens */
+        @media (max-width: 768px) {
+            .emergency-btn {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.8rem;
             }
         }
 
@@ -1010,6 +1064,14 @@
         const emergencyModal = document.getElementById('emergencyModal');
         const modalClose = document.getElementById('modalClose');
 
+        // Mobile Menu Toggle
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mainNav = document.getElementById('main-nav');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            mainNav.classList.toggle('active');
+        });
+
         // Open modal
         emergencyBtn.addEventListener('click', () => {
             emergencyModal.classList.add('active');
@@ -1042,6 +1104,4 @@
 
 
 </body>
-
 </html>
-
