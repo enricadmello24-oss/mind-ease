@@ -60,6 +60,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            gap: 1rem;
         }
 
         .logo {
@@ -696,8 +697,8 @@
         /* Responsive Design */
         /* Mobile Menu Active State */
         @media (max-width: 992px) {
-            nav.active {
-                display: flex;
+            nav {
+                display: none; /* hide by default */
                 flex-direction: column;
                 position: absolute;
                 top: 70px;
@@ -707,10 +708,14 @@
                 border-radius: var(--radius);
                 box-shadow: var(--shadow);
                 gap: 1rem;
+    }
+
+            nav.active {
+                display: flex; /* show when active */
             }
-            
+
             nav a {
-                padding: 0.75rem 1rem;
+                display: block;
             }
         }
 
@@ -742,6 +747,10 @@
         }
 
         @media (max-width: 768px) {
+
+            .logo-text h1 { font-size: 1.5rem; }
+            .logo-text p { font-size: 0.65rem; }
+            
             .hero-text h2 {
                 font-size: 2.5rem;
             }
@@ -784,14 +793,22 @@
                 font-size: 0.85rem;
             }
         }
+
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                align-items: flex-start; 
+                gap: 0.5rem;
+            }
+        }
         
         /* Adjust Emergency Button on Small Screens */
         @media (max-width: 768px) {
             .emergency-btn {
-                padding: 0.4rem 0.8rem;
-                font-size: 0.8rem;
-            }
-        }
+                padding: 0.3rem 0.6rem;
+                font-size: 0.75rem;
+            }}
+
 
     </style>
 </head>
@@ -1066,10 +1083,10 @@
 
         // Mobile Menu Toggle
         const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-        const mainNav = document.getElementById('main-nav');
+        const nav = document.getElementById('main-nav');
 
         mobileMenuBtn.addEventListener('click', () => {
-            mainNav.classList.toggle('active');
+            nav.classList.toggle('active');
         });
 
         // Open modal
