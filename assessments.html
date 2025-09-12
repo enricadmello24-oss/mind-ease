@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindEase | Wellness Assessment & Pathway</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: #f5f8fa;
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(to right, #9b8ce0, #7cd1c9);
+            color: white;
+            padding: 25px 30px;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+        
+        .tagline {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .progress-container {
+            background: #e0f0f2;
+            height: 10px;
+            width: 100%;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(to right, #9b8ce0, #7cd1c9);
+            transition: width 0.5s ease;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .welcome-screen, .question-screen, .results-screen {
+            text-align: center;
+        }
+        
+        .welcome-icon {
+            font-size: 4rem;
+            color: #a777e3;
+            margin-bottom: 20px;
+        }
+        
+        .welcome-screen p {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            color: #555;
+        }
+        
+        .btn {
+            background: linear-gradient(to right, #9b8ce0, #7cd1c9);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(155, 140, 224, 0.4);
+            font-weight: bold;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(155, 140, 224, 0.6);
+        }
+        
+        .question-screen {
+            display: none;
+        }
+        
+        .question-text {
+            font-size: 1.4rem;
+            margin-bottom: 30px;
+            color: #444;
+        }
+        
+        .options {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .option {
+            background: #ffffff;
+            border: 2px solid #d3e3e5;
+            border-radius: 15px;
+            padding: 15px 25px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            flex: 1;
+            min-width: 200px;
+            max-width: 300px;
+        }
+        
+        .option:hover {
+            background: #e8f0f2;
+            transform: translateY(-2px);
+        }
+        
+        .option.selected {
+          background: #d3e3e5;
+          border-color: #9b8ce0;
+          box-shadow: 0 5px 15px rgba(155, 140, 224, 0.3);
+}
+        
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        
+        .results-screen {
+            display: none;
+        }
+        
+        .pathway-container {
+            background: #f0f7f8;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 30px 0;
+            text-align: left;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .pathway-title {
+            color: #9b8ce0;
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+            text-align: center;
+        }
+        
+        .pathway-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid #e0e6ff;
+            transition: all 0.3s ease;
+        }
+        
+        .pathway-item:hover {
+            background-color: rgba(110, 142, 251, 0.05);
+        }
+        
+        .pathway-item:last-child {
+            border-bottom: none;
+        }
+        
+        .day-marker {
+            background: #9b8ce0;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 15px;
+            flex-shrink: 0;
+            font-weight: bold;
+        }
+        
+        .pathway-content {
+            flex-grow: 1;
+        }
+        
+        .pathway-content h3 {
+            margin-bottom: 5px;
+            color: #555;
+        }
+        
+        .pathway-content p {
+            color: #777;
+            font-size: 0.95rem;
+        }
+        
+        .action-btn {
+            background: #9b8ce0;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+            min-width: 80px;
+        }
+        
+        .action-btn:hover {
+            background: #876dcf;
+            transform: translateY(-2px);
+        }
+        
+        .action-btn.completed {
+            background: #55b88b;
+        }
+        
+        .action-btn.completed:hover {
+            background: #4da477;
+        }
+        
+        .activity-screen {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .activity-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+        }
+        
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #f1f1f1;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .activity-title {
+            color: #9b8ce0;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .activity-description {
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        
+        .timer {
+            font-size: 2rem;
+            text-align: center;
+            margin: 20px 0;
+            color: #9b8ce0;
+            font-weight: bold;
+        }
+        
+        .timer-controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .timer-btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background: #6e8efb;
+            color: white;
+        }
+        
+        .completion-message {
+            text-align: center;
+            margin-top: 20px;
+            padding: 15px;
+            background: #e8f5e9;
+            border-radius: 10px;
+            color: #2e7d32;
+            display: none;
+        }
+        
+        .progress-summary {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            padding: 15px;
+            background: #e6f4f1;
+            border-radius: 10px;
+        }
+        
+        .progress-text {
+            font-weight: bold;
+            color: #2e7d32;
+        }
+        
+        .restart-btn {
+            background: #7cd1c9;
+            margin-top: 20px;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: black;
+            font-size: 0.9rem;
+            border-top: 1px solid #eee;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                border-radius: 15px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .option {
+                min-width: 100%;
+            }
+            
+            .pathway-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .day-marker {
+                margin-bottom: 10px;
+            }
+            
+            .action-btn {
+                margin-top: 10px;
+                align-self: flex-end;
+            }
+            
+            .nav-buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .nav-buttons .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>MindEase Wellness Pathway</h1>
+            <p class="tagline">Your personalized journey to better mental health</p>
+        </header>
+        
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+        
+        <div class="content">
+            <!-- Welcome Screen -->
+            <div class="welcome-screen" id="welcomeScreen">
+                <div class="welcome-icon">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <p>Welcome to your personalized wellness assessment. We'll ask you a few questions about your current state of mind and then create a custom 7-day plan to help improve your mental wellbeing.</p>
+                <button class="btn" id="startBtn">Begin Assessment</button>
+            </div>
+            
+            <!-- Question Screen -->
+            <div class="question-screen" id="questionScreen">
+                <h2 class="question-text" id="questionText">How are you feeling today?</h2>
+                <div class="options" id="optionsContainer">
+                    <!-- Options will be inserted by JavaScript -->
+                </div>
+                <div class="nav-buttons">
+                    <button class="btn" id="prevBtn" style="visibility: hidden;"><i class="fas fa-arrow-left"></i> Previous</button>
+                    <button class="btn" id="nextBtn">Next <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+            
+            <!-- Results Screen -->
+            <div class="results-screen" id="resultsScreen">
+                <h2>Your Personalized Wellness Pathway</h2>
+                <p>Based on your responses, we've created this 7-day plan to help you build better mental health habits:</p>
+                
+                <div class="pathway-container">
+                    <h3 class="pathway-title" id="pathwayTitle">Your 7-Day MindEase Plan</h3>
+                    <div class="pathway-list" id="pathwayList">
+                        <!-- Pathway items will be inserted by JavaScript -->
+                    </div>
+                    
+                    <div class="progress-summary">
+                        <div class="progress-text">Progress: <span id="completedCount">0</span> of 7 activities completed</div>
+                        <div class="progress-bar-container">
+                            <progress id="pathwayProgressBar" value="0" max="7"></progress>
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="btn restart-btn" id="restartBtn">Start Again</button>
+            </div>
+        </div>
+        
+        <!-- Activity Screens -->
+        <div class="activity-screen" id="activityScreen">
+            <div class="activity-content">
+                <button class="close-btn">&times;</button>
+                <h2 class="activity-title" id="activityTitle">Activity Title</h2>
+                <p class="activity-description" id="activityDescription">Activity description will appear here.</p>
+                
+                <div id="timerContainer">
+                    <div class="timer" id="timer">10:00</div>
+                    <div class="timer-controls">
+                        <button class="timer-btn" id="startTimer">Start Timer</button>
+                        <button class="timer-btn" id="pauseTimer">Pause</button>
+                        <button class="timer-btn" id="resetTimer">Reset</button>
+                    </div>
+                </div>
+                
+                <div id="reflectionContainer" style="display: none;">
+                    <h3>Reflection</h3>
+                    <textarea id="reflectionText" placeholder="Write your thoughts here..." rows="4" style="width: 100%; padding: 10px; margin-top: 10px; border-radius: 5px; border: 1px solid #ddd;"></textarea>
+                </div>
+                
+                <div id="affirmationContainer" style="display: none;">
+                    <h3>Your Affirmations</h3>
+                    <input type="text" class="affirmation-input" placeholder="Affirmation 1" style="width: 100%; padding: 10px; margin-top: 5px; border-radius: 5px; border: 1px solid #ddd;">
+                    <input type="text" class="affirmation-input" placeholder="Affirmation 2" style="width: 100%; padding: 10px; margin-top: 5px; border-radius: 5px; border: 1px solid #ddd;">
+                    <input type="text" class="affirmation-input" placeholder="Affirmation 3" style="width: 100%; padding: 10px; margin-top: 5px; border-radius: 5px; border: 1px solid #ddd;">
+                </div>
+                
+                <div id="activitySpecificContent"></div>
+                
+                <button class="btn" id="completeActivity" style="display: block; margin: 20px auto 0;">Complete Activity</button>
+                
+                <div class="completion-message" id="completionMessage">
+                    <i class="fas fa-check-circle"></i> Activity completed successfully!
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>MindEase &copy; 2023 | Personalized Mental Wellness</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // DOM Elements
+            const welcomeScreen = document.getElementById('welcomeScreen');
+            const questionScreen = document.getElementById('questionScreen');
+            const resultsScreen = document.getElementById('resultsScreen');
+            const startBtn = document.getElementById('startBtn');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const restartBtn = document.getElementById('restartBtn');
+            const questionText = document.getElementById('questionText');
+            const optionsContainer = document.getElementById('optionsContainer');
+            const pathwayList = document.getElementById('pathwayList');
+            const pathwayTitle = document.getElementById('pathwayTitle');
+            const progressBar = document.getElementById('progressBar');
+            const pathwayProgressBar = document.getElementById('pathwayProgressBar');
+            const completedCount = document.getElementById('completedCount');
+            
+            // Activity Screen Elements
+            const activityScreen = document.getElementById('activityScreen');
+            const activityTitle = document.getElementById('activityTitle');
+            const activityDescription = document.getElementById('activityDescription');
+            const timerContainer = document.getElementById('timerContainer');
+            const timerElement = document.getElementById('timer');
+            const startTimerBtn = document.getElementById('startTimer');
+            const pauseTimerBtn = document.getElementById('pauseTimer');
+            const resetTimerBtn = document.getElementById('resetTimer');
+            const reflectionContainer = document.getElementById('reflectionContainer');
+            const affirmationContainer = document.getElementById('affirmationContainer');
+            const completeActivityBtn = document.getElementById('completeActivity');
+            const completionMessage = document.getElementById('completionMessage');
+            const closeBtn = document.querySelector('.close-btn');
+            
+            // Assessment questions
+            const questions = [
+                {
+                    question: "How are you feeling today?",
+                    options: ["Very stressed", "Anxious", "A bit down", "Mostly calm", "Great!"]
+                },
+                {
+                    question: "How would you describe your sleep quality?",
+                    options: ["Restless nights", "Difficulty falling asleep", "Waking up frequently", "Generally good", "Excellent, restful sleep"]
+                },
+                {
+                    question: "How is your energy level throughout the day?",
+                    options: ["Constantly exhausted", "Tired most of the time", "Moderate energy", "Generally energetic", "High energy all day"]
+                },
+                {
+                    question: "How often do you practice mindfulness or meditation?",
+                    options: ["Never", "Rarely", "Sometimes", "Often", "Daily"]
+                },
+                {
+                    question: "How connected do you feel to others?",
+                    options: ["Very isolated", "Somewhat lonely", "Neutral", "Generally connected", "Very socially connected"]
+                }
+            ];
+            
+            // Pathway recommendations based on assessment
+            const pathwayTemplates = {
+                stressed: {
+                    title: "Stress Reduction Pathway",
+                    activities: [
+                        { day: 1, title: "Deep Breathing Exercise", description: "5-minute guided breathing exercise to calm your nervous system", hasTimer: true, timerDuration: 300 },
+                        { day: 2, title: "Progressive Muscle Relaxation", description: "Learn to release tension throughout your body", hasTimer: true, timerDuration: 600 },
+                        { day: 3, title: "Mindful Walking", description: "10-minute outdoor walk focusing on your senses", hasTimer: true, timerDuration: 600 },
+                        { day: 4, title: "Stress Journaling", description: "Identify and reflect on your stress triggers", hasReflection: true },
+                        { day: 5, title: "Digital Detox", description: "Take a 2-hour break from screens and notifications", hasReflection: true },
+                        { day: 6, title: "Gratitude Practice", description: "Write down three things you're grateful for", hasReflection: true },
+                        { day: 7, title: "Nature Connection", description: "Spend 30 minutes in a natural environment", hasTimer: true, timerDuration: 1800 }
+                    ]
+                },
+                anxiety: {
+                    title: "Anxiety Management Pathway",
+                    activities: [
+                        { day: 1, title: "Box Breathing Technique", description: "4-4-4-4 breathing method to reduce anxiety", hasTimer: true, timerDuration: 300 },
+                        { day: 2, title: "Thought Record Exercise", description: "Identify and challenge anxious thoughts", hasReflection: true },
+                        { day: 3, title: "Body Scan Meditation", description: "15-minute guided meditation for body awareness", hasTimer: true, timerDuration: 900 },
+                        { day: 4, title: "Worry Time Technique", description: "Contain worries to a specific time period", hasReflection: true },
+                        { day: 5, title: "Sensory Grounding Exercise", description: "5-4-3-2-1 technique to stay present", hasTimer: true, timerDuration: 300 },
+                        { day: 6, title: "Visualization Practice", description: "Imagine a peaceful place in detail", hasReflection: true },
+                        { day: 7, title: "Progressive Exposure", description: "Face a small fear in a controlled way", hasReflection: true }
+                    ]
+                },
+                depression: {
+                    title: "Mood Enhancement Pathway",
+                    activities: [
+                        { day: 1, title: "Behavior Activation", description: "Schedule one enjoyable activity today", hasReflection: true },
+                        { day: 2, title: "Positive Affirmations", description: "Write and repeat three positive statements about yourself", hasAffirmationInput: true },
+                        { day: 3, title: "Physical Activity", description: "20 minutes of moderate exercise", hasTimer: true, timerDuration: 1200 },
+                        { day: 4, title: "Social Connection", description: "Reach out to one friend or family member", hasReflection: true },
+                        { day: 5, title: "Accomplishment Tracking", description: "List three things you achieved today", hasReflection: true },
+                        { day: 6, title: "Mindful Eating", description: "Eat one meal without distractions", hasTimer: true, timerDuration: 900 },
+                        { day: 7, title: "Future Self Visualization", description: "Imagine yourself feeling better in the future", hasReflection: true }
+                    ]
+                },
+                default: {
+                    title: "General Wellness Pathway",
+                    activities: [
+                        { day: 1, title: "Mindful Breathing", description: "5-minute awareness of breath exercise", hasTimer: true, timerDuration: 300 },
+                        { day: 2, title: "Gratitude Journaling", description: "Write down three things you appreciate", hasReflection: true },
+                        { day: 3, title: "Body Scan", description: "10-minute body awareness meditation", hasTimer: true, timerDuration: 600 },
+                        { day: 4, title: "Digital Detox", description: "Take a 1-hour break from screens", hasReflection: true },
+                        { day: 5, title: "Nature Connection", description: "Spend 20 minutes outdoors", hasTimer: true, timerDuration: 1200 },
+                        { day: 6, title: "Kindness Exercise", description: "Perform one act of kindness for someone", hasReflection: true },
+                        { day: 7, title: "Reflection", description: "Review your week and note what helped", hasReflection: true }
+                    ]
+                }
+            };
+            
+            let currentQuestion = 0;
+            let userResponses = [];
+            let currentActivity = null;
+            let timerInterval = null;
+            let timerSeconds = 0;
+            let timerRunning = false;
+            let completedActivities = JSON.parse(localStorage.getItem('completedActivities')) || [];
+            
+            // Initialize the assessment
+            startBtn.addEventListener('click', startAssessment);
+            nextBtn.addEventListener('click', goToNextQuestion);
+            prevBtn.addEventListener('click', goToPreviousQuestion);
+            restartBtn.addEventListener('click', restartAssessment);
+            
+            // Timer control buttons
+            startTimerBtn.addEventListener('click', startTimer);
+            pauseTimerBtn.addEventListener('click', pauseTimer);
+            resetTimerBtn.addEventListener('click', resetTimer);
+            
+            // Complete activity button
+            completeActivityBtn.addEventListener('click', function() {
+                completeActivity(currentActivity);
+            });
+            
+            // Close activity screen
+            closeBtn.addEventListener('click', function() {
+                activityScreen.style.display = 'none';
+                if (timerInterval) {
+                    clearInterval(timerInterval);
+                }
+            });
+            
+            function startAssessment() {
+                welcomeScreen.style.display = 'none';
+                questionScreen.style.display = 'block';
+                showQuestion(currentQuestion);
+                updateProgressBar();
+            }
+            
+            function showQuestion(index) {
+                questionText.textContent = questions[index].question;
+                optionsContainer.innerHTML = '';
+                
+                questions[index].options.forEach((option, i) => {
+                    const optionElement = document.createElement('div');
+                    optionElement.classList.add('option');
+                    optionElement.textContent = option;
+                    optionElement.addEventListener('click', () => selectOption(i));
+                    optionsContainer.appendChild(optionElement);
+                });
+                
+                // Show/hide previous button
+                prevBtn.style.visibility = index > 0 ? 'visible' : 'hidden';
+                
+                // Update next button text for last question
+                nextBtn.innerHTML = index === questions.length - 1 ? 'See Results <i class="fas fa-arrow-right"></i>' : 'Next <i class="fas fa-arrow-right"></i>';
+            }
+            
+            function selectOption(optionIndex) {
+                // Remove selected class from all options
+                const options = document.querySelectorAll('.option');
+                options.forEach(option => option.classList.remove('selected'));
+                
+                // Add selected class to clicked option
+                options[optionIndex].classList.add('selected');
+                
+                // Store response
+                userResponses[currentQuestion] = optionIndex;
+            }
+            
+            function goToNextQuestion() {
+                if (userResponses[currentQuestion] === undefined) {
+                    alert('Please select an option to continue');
+                    return;
+                }
+                
+                if (currentQuestion < questions.length - 1) {
+                    currentQuestion++;
+                    showQuestion(currentQuestion);
+                } else {
+                    showResults();
+                }
+                
+                updateProgressBar();
+            }
+            
+            function goToPreviousQuestion() {
+                if (currentQuestion > 0) {
+                    currentQuestion--;
+                    showQuestion(currentQuestion);
+                    updateProgressBar();
+                }
+            }
+            
+            function updateProgressBar() {
+                const progress = ((currentQuestion + 1) / questions.length) * 100;
+                progressBar.style.width = `${progress}%`;
+            }
+            
+            function showResults() {
+                questionScreen.style.display = 'none';
+                resultsScreen.style.display = 'block';
+                
+                // Determine pathway based on responses
+                let pathwayKey = 'default';
+                
+                // Simple logic to determine pathway based on first question response
+                if (userResponses[0] <= 1) { // Very stressed or anxious
+                    pathwayKey = 'anxiety';
+                } else if (userResponses[0] === 2) { // A bit down
+                    pathwayKey = 'depression';
+                } else if (userResponses[0] === 0) { // Very stressed
+                    pathwayKey = 'stressed';
+                }
+                
+                const pathway = pathwayTemplates[pathwayKey];
+                pathwayTitle.textContent = pathway.title;
+                
+                // Display pathway
+                pathwayList.innerHTML = '';
+                pathway.activities.forEach(activity => {
+                    const item = document.createElement('div');
+                    item.classList.add('pathway-item');
+                    
+                    const isCompleted = completedActivities.includes(activity.day);
+                    
+                    item.innerHTML = `
+                        <div class="day-marker">Day ${activity.day}</div>
+                        <div class="pathway-content">
+                            <h3>${activity.title}</h3>
+                            <p>${activity.description}</p>
+                        </div>
+                        <button class="action-btn ${isCompleted ? 'completed' : ''}" data-day="${activity.day}">${isCompleted ? 'Completed' : 'Start'}</button>
+                    `;
+                    
+                    pathwayList.appendChild(item);
+                });
+                
+                // Add event listeners to activity buttons
+                document.querySelectorAll('.pathway-item .action-btn').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const day = parseInt(this.getAttribute('data-day'));
+                        const activity = pathway.activities.find(a => a.day === day);
+                        startActivity(day, activity);
+                    });
+                });
+                
+                updatePathwayProgress();
+            }
+            
+            function startActivity(day, activity) {
+                currentActivity = day;
+                
+                // Update activity screen content
+                activityTitle.textContent = activity.title;
+                activityDescription.textContent = activity.description;
+                
+                // Show/hide timer based on activity
+                if (activity.hasTimer) {
+                    timerContainer.style.display = 'block';
+                    timerSeconds = activity.timerDuration;
+                    updateTimerDisplay();
+                } else {
+                    timerContainer.style.display = 'none';
+                }
+                
+                // Show/hide reflection section
+                if (activity.hasReflection) {
+                    reflectionContainer.style.display = 'block';
+                } else {
+                    reflectionContainer.style.display = 'none';
+                }
+                
+                // Show/hide affirmation inputs
+                if (activity.hasAffirmationInput) {
+                    affirmationContainer.style.display = 'block';
+                } else {
+                    affirmationContainer.style.display = 'none';
+                }
+                
+                // Reset completion message
+                completionMessage.style.display = 'none';
+                completeActivityBtn.style.display = 'block';
+                
+                // Show the activity screen
+                activityScreen.style.display = 'flex';
+            }
+            
+            // Timer functions
+            function startTimer() {
+                if (!timerRunning) {
+                    timerInterval = setInterval(function() {
+                        if (timerSeconds > 0) {
+                            timerSeconds--;
+                            updateTimerDisplay();
+                        } else {
+                            clearInterval(timerInterval);
+                            timerRunning = false;
+                            completeActivityBtn.style.display = 'block';
+                        }
+                    }, 1000);
+                    timerRunning = true;
+                }
+            }
+            
+            function pauseTimer() {
+                if (timerRunning) {
+                    clearInterval(timerInterval);
+                    timerRunning = false;
+                }
+            }
+            
+            function resetTimer() {
+                clearInterval(timerInterval);
+                timerRunning = false;
+                const pathway = getCurrentPathway();
+                const activity = pathway.activities.find(a => a.day === currentActivity);
+                timerSeconds = activity.timerDuration;
+                updateTimerDisplay();
+            }
+            
+            function updateTimerDisplay() {
+                const minutes = Math.floor(timerSeconds / 60);
+                const seconds = timerSeconds % 60;
+                timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            }
+            
+            function getCurrentPathway() {
+                let pathwayKey = 'default';
+                if (userResponses[0] <= 1) pathwayKey = 'anxiety';
+                else if (userResponses[0] === 2) pathwayKey = 'depression';
+                else if (userResponses[0] === 0) pathwayKey = 'stressed';
+                return pathwayTemplates[pathwayKey];
+            }
+            
+            // Complete an activity
+            function completeActivity(day) {
+                // Mark as completed in UI
+                const button = document.querySelector(`.action-btn[data-day="${day}"]`);
+                button.textContent = 'Completed';
+                button.classList.add('completed');
+                
+                // Add to completed activities if not already there
+                if (!completedActivities.includes(day)) {
+                    completedActivities.push(day);
+                    localStorage.setItem('completedActivities', JSON.stringify(completedActivities));
+                }
+                
+                // Update progress
+                updatePathwayProgress();
+                
+                // Show completion message
+                completionMessage.style.display = 'block';
+                completeActivityBtn.style.display = 'none';
+                
+                // Auto-close after 2 seconds
+                setTimeout(function() {
+                    activityScreen.style.display = 'none';
+                    if (timerInterval) {
+                        clearInterval(timerInterval);
+                    }
+                }, 2000);
+            }
+            
+            function updatePathwayProgress() {
+                const count = completedActivities.length;
+                completedCount.textContent = count;
+                pathwayProgressBar.value = count;
+            }
+            
+            function restartAssessment() {
+                currentQuestion = 0;
+                userResponses = [];
+                resultsScreen.style.display = 'none';
+                welcomeScreen.style.display = 'block';
+                progressBar.style.width = '0%';
+            }
+        });
+    </script>
+</body>
+</html>

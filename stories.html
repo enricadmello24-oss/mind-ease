@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Community Stories - MindSoothe</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: #a1c4fd;
+            color: black;
+            min-height: 100vh;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            background: #c2e9fb;
+            backdrop-filter: blur(10px);
+            border-radius: 25px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        header {
+            background: rgba(0, 0, 0, 0.2);
+            color: black;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+        
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .tagline {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            font-weight:500;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .stories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .story-card {
+            background: rgba(255, 255, 255, 0.25);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            transition: all 0.4s ease;
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .story-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .story-image {
+            height: 200px;
+            overflow: hidden;
+        }
+        
+        .story-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        
+        .story-card:hover .story-image img {
+            transform: scale(1.1);
+        }
+        
+        .story-content {
+            padding: 25px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            color: black;
+        }
+        
+        .story-content h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: black;
+        }
+        
+        .story-meta {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+            color: black;
+        }
+        
+        .story-meta span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .story-text {
+            color: black;
+            margin-bottom: 20px;
+            line-height: 1.6;
+            flex-grow: 1;
+        }
+        
+        .story-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .story-tag {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+        }
+        
+        .read-more-btn {
+            background: linear-gradient(to right, #ff7e5f, #feb47b);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 20px rgba(255, 126, 95, 0.5);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: auto;
+        }
+        
+        .read-more-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255, 126, 95, 0.7);
+        }
+        
+        .story-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        
+        .story-modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            border-radius: 25px;
+            max-width: 900px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.5rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s ease;
+            color: white;
+            z-index: 10;
+        }
+        
+        .modal-close:hover {
+            background: #ff4757;
+            transform: rotate(90deg);
+        }
+        
+        .modal-header {
+            padding: 40px 40px 20px;
+            position: relative;
+        }
+        
+        .modal-header-image {
+            height: 300px;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 25px;
+        }
+        
+        .modal-header-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .modal-body {
+            padding: 0 40px 40px;
+        }
+        
+        .modal-title {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: #fff;
+        }
+        
+        .modal-meta {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 25px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .modal-text {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .modal-text p {
+            margin-bottom: 20px;
+        }
+        
+        .modal-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 30px 0;
+            
+        }
+        
+        .modal-tag {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            color: white;
+        }
+        
+        @media (max-width: 768px) {
+            .stories-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .modal-header {
+                padding: 30px 20px 15px;
+            }
+            
+            .modal-body {
+                padding: 0 20px 30px;
+            }
+            
+            .modal-title {
+                font-size: 2rem;
+            }
+            
+            .modal-header-image {
+                height: 200px;
+            }
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .section-title h2 {
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            color: black;
+        }
+        
+        .section-title p {
+            font-size: 1.2rem;
+            color: black;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Community Stories</h1>
+            <p class="tagline">Real stories of hope, healing, and resilience</p>
+        </header>
+        
+        <div class="content">
+            <div class="section-title">
+                <h2>Stories of Hope & Healing</h2>
+                <p>Read how others have overcome mental health challenges and found their path to wellness</p>
+            </div>
+            
+            <div class="stories-grid">
+                <!-- Story 1 -->
+                <div class="story-card" data-story="1">
+                    <div class="story-image">
+                        <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Woman smiling">
+                    </div>
+                    <div class="story-content">
+                        <h3>My Journey with Depression</h3>
+                        <div class="story-meta">
+                            <span><i class="fas fa-user"></i> Sarah M. (USA)</span>
+                            <span><i class="fas fa-clock"></i> 2 weeks ago</span>
+                        </div>
+                        <div class="story-text">
+                            <p>I never thought I'd overcome my depression, but with therapy, medication, and daily meditation, I've found a peace I didn't know was possible...</p>
+                        </div>
+                        <div class="story-tags">
+                            <span class="story-tag">Depression</span>
+                            <span class="story-tag">Therapy</span>
+                            <span class="story-tag">Meditation</span>
+                        </div>
+                        <button class="read-more-btn">Read Full Story <i class="fas fa-arrow-right"></i></button>
+                    </div>
+                </div>
+                
+                <!-- Story 2 -->
+                <div class="story-card" data-story="2">
+                    <div class="story-image">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Man in nature">
+                    </div>
+                    <div class="story-content">
+                        <h3>Finding Peace with Anxiety</h3>
+                        <div class="story-meta">
+                            <span><i class="fas fa-user"></i> Michael T. (Canada)</span>
+                            <span><i class="fas fa-clock"></i> 1 month ago</span>
+                        </div>
+                        <div class="story-text">
+                            <p>For years, I struggled silently with anxiety. Finding the right coping mechanisms and a supportive community changed everything for me...</p>
+                        </div>
+                        <div class="story-tags">
+                            <span class="story-tag">Anxiety</span>
+                            <span class="story-tag">Support System</span>
+                            <span class="story-tag">Self-Care</span>
+                        </div>
+                        <button class="read-more-btn">Read Full Story <i class="fas fa-arrow-right"></i></button>
+                    </div>
+                </div>
+                
+                <!-- Story 3 -->
+                <div class="story-card" data-story="3">
+                    <div class="story-image">
+                        <img src="https://images.unsplash.com/photo-1489424731084-a5d8b219a5bb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Person meditating">
+                    </div>
+                    <div class="story-content">
+                        <h3>From Burnout to Balance</h3>
+                        <div class="story-meta">
+                            <span><i class="fas fa-user"></i> Jessica L. (UK)</span>
+                            <span><i class="fas fa-clock"></i> 3 weeks ago</span>
+                        </div>
+                        <div class="story-text">
+                            <p>My corporate job had me constantly stressed and overwhelmed. I was on the verge of burnout when I discovered mindfulness practices...</p>
+                        </div>
+                        <div class="story-tags">
+                            <span class="story-tag">Burnout</span>
+                            <span class="story-tag">Mindfulness</span>
+                            <span class="story-tag">Work-Life Balance</span>
+                        </div>
+                        <button class="read-more-btn">Read Full Story <i class="fas fa-arrow-right"></i></button>
+                    </div>
+                </div>
+                
+                <!-- Story 4 -->
+                <div class="story-card" data-story="4">
+                    <div class="story-image">
+                        <img src="https://images.unsplash.com/photo-1491349174775-aaafddd81942?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Person with family">
+                    </div>
+                    <div class="story-content">
+                        <h3>Healing with Family Support</h3>
+                        <div class="story-meta">
+                            <span><i class="fas fa-user"></i> David K. (Australia)</span>
+                            <span><i class="fas fa-clock"></i> 2 months ago</span>
+                        </div>
+                        <div class="story-text">
+                            <p>When I hit my lowest point, it was my family who helped me find the strength to seek help. Their unconditional support made all the difference...</p>
+                        </div>
+                        <div class="story-tags">
+                            <span class="story-tag">Family Support</span>
+                            <span class="story-tag">Recovery</span>
+                            <span class="story-tag">Therapy</span>
+                        </div>
+                        <button class="read-more-btn">Read Full Story <i class="fas fa-arrow-right"></i></button>
+                    </div>
+                </div>
+                
+                <!-- Story 5 -->
+                <div class="story-card" data-story="5">
+                    <div class="story-image">
+                        <img src="https://images.unsplash.com/photo-1545167622-3a6ac756afa4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Person with friends">
+                    </div>
+                    <div class="story-content">
+                        <h3>How Friends Saved Me</h3>
+                        <div class="story-meta">
+                            <span><i class="fas fa-user"></i> Alex P. (South Africa)</span>
+                            <span><i class="fas fa-clock"></i> 5 weeks ago</span>
+                        </div>
+                        <div class="story-text">
+                            <p>I was isolating myself in my depression when my friends intervened. They showed me I wasn't alone and helped me find professional help...</p>
+                        </div>
+                        <div class="story-tags">
+                            <span class="story-tag">Friendship</span>
+                            <span class="story-tag">Intervention</span>
+                            <span class="story-tag">Support System</span>
+                        </div>
+                        <button class="read-more-btn">Read Full Story <i class="fas fa-arrow-right"></i></button>
+                    </div>
+                </div>
+                
+                <!-- Story 6 -->
+                <div class="story-card" data-story="6">
+                    <div class="story-image">
+                        <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Professional woman">
+                    </div>
+                    <div class="story-content">
+                        <h3>Overcoming Workplace Anxiety</h3>
+                        <div class="story-meta">
+                            <span><i class="fas fa-user"></i> Rachel S. (India)</span>
+                            <span><i class="fas fa-clock"></i> 6 weeks ago</span>
+                        </div>
+                        <div class="story-text">
+                            <p>My anxiety was affecting my career until I found a coach who taught me practical techniques to manage stress and build confidence...</p>
+                        </div>
+                        <div class="story-tags">
+                            <span class="story-tag">Work Anxiety</span>
+                            <span class="story-tag">Coaching</span>
+                            <span class="story-tag">Confidence</span>
+                        </div>
+                        <button class="read-more-btn">Read Full Story <i class="fas fa-arrow-right"></i></button>
+                    </div>
+                </div>
+                
+                <!-- Story 7 -->
+                <div class="story-card" data-story="7">
+                    <div class="story-image">
+                        <img src="https://images.unsplash.com/photo-1516585427167-9f4af9627e6c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Person hiking">
+                    </div>
+                    <div class="story-content">
+                        <h3>Nature's Healing Power</h3>
+                        <div class="story-meta">
+                            <span><i class="fas fa-user"></i> Mark T. (New Zealand)</span>
+                            <span><i class="fas fa-clock"></i> 3 months ago</span>
+                        </div>
+                        <div class="story-text">
+                            <p>After my divorce, I fell into a deep depression. It was through hiking and connecting with nature that I found my way back to myself...</p>
+                        </div>
+                        <div class="story-tags">
+                            <span class="story-tag">Nature Therapy</span>
+                            <span class="story-tag">Divorce</span>
+                            <span class="story-tag">Self-Discovery</span>
+                        </div>
+                        <button class="read-more-btn">Read Full Story <i class="fas fa-arrow-right"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Story Modals -->
+    
+    <!-- Story 1 Modal -->
+    <div class="story-modal" id="story-1">
+        <div class="modal-content">
+            <button class="modal-close">&times;</button>
+            <div class="modal-header">
+                <div class="modal-header-image">
+                    <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Sarah smiling">
+                </div>
+                <h2 class="modal-title">My Journey with Depression</h2>
+                <div class="modal-meta">
+                    <span><i class="fas fa-user"></i> Sarah M. (USA)</span>
+                    <span><i class="fas fa-clock"></i> 2 weeks ago</span>
+                    <span><i class="fas fa-comments"></i> 24 comments</span>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="modal-text">
+                    <p>I never thought I'd overcome my depression. For years, I struggled with overwhelming sadness, lack of energy, and a sense of hopelessness that colored every aspect of my life. Getting out of bed felt like a monumental task, and social interactions left me exhausted.</p>
+                    
+                    <p>My turning point came when I finally admitted I needed help. I started with therapy, which was challenging at first but gradually helped me understand the roots of my depression. My therapist introduced me to cognitive behavioral techniques that allowed me to reframe my negative thought patterns.</p>
+                    
+                    <p>Medication was another important component of my recovery. After consulting with a psychiatrist, I found a medication that worked for me with minimal side effects. It didn't "fix" me, but it gave me the stability I needed to engage fully in therapy and self-care practices.</p>
+                    
+                    <p>Daily meditation became my anchor. Starting with just five minutes each morning, I gradually built a practice that now includes 20 minutes of mindfulness meditation. This practice has taught me to observe my thoughts without judgment and has significantly reduced my anxiety.</p>
+                    
+                    <p>Exercise, particularly yoga and walking, also played a crucial role in my recovery. The combination of movement, fresh air, and mindfulness helped lift my mood and gave me more energy.</p>
+                    
+                    <p>Today, I still have difficult days, but they're fewer and farther between. I've learned to recognize my triggers and have developed coping strategies that work for me. Most importantly, I've learned to be kinder to myself and to celebrate small victories along the way.</p>
+                    
+                    <p>If you're struggling with depression, please know that help is available and recovery is possible. It might not be a linear journey, but each step forward is worth taking.</p>
+                </div>
+                
+                <div class="modal-tags">
+                    <span class="modal-tag">Depression</span>
+                    <span class="modal-tag">Therapy</span>
+                    <span class="modal-tag">Medication</span>
+                    <span class="modal-tag">Meditation</span>
+                    <span class="modal-tag">Self-Care</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Story 2 Modal -->
+    <div class="story-modal" id="story-2">
+        <div class="modal-content">
+            <button class="modal-close">&times;</button>
+            <div class="modal-header">
+                <div class="modal-header-image">
+                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Michael in nature">
+                </div>
+                <h2 class="modal-title">Finding Peace with Anxiety</h2>
+                <div class="modal-meta">
+                    <span><i class="fas fa-user"></i> Michael T. (Canada)</span>
+                    <span><i class="fas fa-clock"></i> 1 month ago</span>
+                    <span><i class="fas fa-comments"></i> 18 comments</span>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="modal-text">
+                    <p>For years, I struggled silently with anxiety. It began in college with occasional panic attacks that I dismissed as stress. But over time, the anxiety grew until it was affecting every aspect of my life. I would lie awake at night worrying about things that hadn't happened yet, and social situations became sources of dread rather than connection.</p>
+                    
+                    <p>My breakthrough came when I finally opened up to a close friend about what I was experiencing. To my surprise, they shared that they too had struggled with anxiety and recommended a therapist who had helped them. That conversation was the beginning of my journey to managing my anxiety rather than letting it manage me.</p>
+                    
+                    <p>Cognitive Behavioral Therapy (CBT) was transformative for me. I learned to identify my anxiety triggers and challenge the catastrophic thinking patterns that fueled my anxiety. My therapist taught me practical techniques like grounding exercises and breathing techniques that I could use in moments of high anxiety.</p>
+                    
+                    <p>I also discovered the power of community. I joined a support group for people with anxiety disorders, and for the first time, I felt truly understood. Sharing experiences and coping strategies with others who genuinely understood what I was going through reduced the shame I felt about my anxiety.</p>
+                    
+                    <p>Lifestyle changes made a significant difference too. Regular exercise, particularly running, became my moving meditation. I also made changes to my diet, reducing caffeine and sugar, which had been exacerbating my anxiety symptoms.</p>
+                    
+                    <p>Perhaps the most important lesson I've learned is that anxiety management is an ongoing practice, not a destination. I still have anxious moments, but now I have tools to navigate them. I've learned to be patient with myself and to celebrate progress, however small it may seem.</p>
+                    
+                    <p>If you're living with anxiety, know that you're not alone and that with the right support and strategies, it can become manageable. Reach out, be kind to yourself, and take it one day at a time.</p>
+                </div>
+                
+                <div class="modal-tags">
+                    <span class="modal-tag">Anxiety</span>
+                    <span class="modal-tag">CBT</span>
+                    <span class="modal-tag">Support Group</span>
+                    <span class="modal-tag">Breathing Techniques</span>
+                    <span class="modal-tag">Lifestyle Changes</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Story 3 Modal -->
+    <div class="story-modal" id="story-3">
+        <div class="modal-content">
+            <button class="modal-close">&times;</button>
+            <div class="modal-header">
+                <div class="modal-header-image">
+                    <img src="https://images.unsplash.com/photo-1489424731084-a5d8b219a5bb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Jessica meditating">
+                </div>
+                <h2 class="modal-title">From Burnout to Balance</h2>
+                <div class="modal-meta">
+                    <span><i class="fas fa-user"></i> Jessica L. (UK)</span>
+                    <span><i class="fas fa-clock"></i> 3 weeks ago</span>
+                    <span><i class="fas fa-comments"></i> 32 comments</span>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="modal-text">
+                    <p>My corporate job in London had me constantly stressed and overwhelmed. I was working 60-70 hour weeks, constantly checking emails even during weekends, and feeling like I was always behind. I was on the verge of complete burnout when I finally hit a wall.</p>
+                    
+                    <p>It was my neighbor who noticed first. She saw how exhausted I looked and shared her own experience with burnout. She recommended a mindfulness coach who had helped her, and despite my skepticism, I decided to give it a try.</p>
+                    
+                    <p>Mindfulness practices completely transformed my relationship with work and stress. I started with just five minutes of meditation each morning, gradually building up to 20 minutes. I learned to recognize the physical signs of stress in my body and use breathing techniques to calm my nervous system.</p>
+                    
+                    <p>I also made significant changes to my work habits. I set clear boundaries around my working hours, learned to delegate more effectively, and started taking regular breaks throughout the day. My coach helped me understand that constant busyness doesn't equal productivity.</p>
+                    
+                    <p>Nature became my sanctuary. I started spending weekends hiking in the countryside instead of catching up on work. The combination of physical activity, fresh air, and being surrounded by nature had a profoundly calming effect on my overwhelmed nervous system.</p>
+                    
+                    <p>Today, I still work in the same industry, but my approach to work and life has completely changed. I'm more productive in my focused working hours than I ever was when I was constantly "on." I've learned that true success includes wellbeing, not just professional achievements.</p>
+                    
+                    <p>If you're experiencing burnout, know that it's not a sign of weakness but rather an indication that your current way of working isn't sustainable. Small changes, consistently applied, can lead to profound transformations in your wellbeing.</p>
+                </div>
+                
+                <div class="modal-tags">
+                    <span class="modal-tag">Burnout</span>
+                    <span class="modal-tag">Mindfulness</span>
+                    <span class="modal-tag">Work-Life Balance</span>
+                    <span class="modal-tag">Coaching</span>
+                    <span class="modal-tag">Nature Therapy</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Story 4 Modal -->
+    <div class="story-modal" id="story-4">
+        <div class="modal-content">
+            <button class="modal-close">&times;</button>
+            <div class="modal-header">
+                <div class="modal-header-image">
+                    <img src="https://images.unsplash.com/photo-1491349174775-aaafddd81942?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="David with family">
+                </div>
+                <h2 class="modal-title">Healing with Family Support</h2>
+                <div class="modal-meta">
+                    <span><i class="fas fa-user"></i> David K. (Australia)</span>
+                    <span><i class="fas fa-clock"></i> 2 months ago</span>
+                    <span><i class="fas fa-comments"></i> 41 comments</span>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="modal-text">
+                    <p>When I hit my lowest point with depression, it was my family who became my lifeline. I had been hiding my struggle for months, putting on a brave face while feeling completely empty inside. It was my younger sister who first noticed something was wrong.</p>
+                    
+                    <p>She approached me with such compassion and concern that I finally broke down and shared what I'd been going through. Instead of judgment, I received understanding. She shared that she too had experienced depression in university and helped me understand that it was an illness, not a personal failure.</p>
+                    
+                    <p>My family rallied around me in ways I never could have imagined. My parents helped me find a therapist and offered to cover the costs. My brother started checking in with me daily, sometimes just with a funny meme or a quick call. These small gestures made me feel connected when I wanted to isolate.</p>
+                    
+                    <p>Family therapy sessions helped us all understand depression better and learn how to support each other. We learned communication techniques that allowed us to talk openly about mental health without stigma or shame.</p>
+                    
+                    <p>My recovery wasn't linear. There were setbacks and difficult days, but having my family's unconditional support made all the difference. They celebrated small victories with me - the first time I cooked a meal for myself in weeks, when I started taking walks again, when I finally felt genuine laughter bubble up.</p>
+                    
+                    <p>What I learned through this experience is that vulnerability can be a strength. By allowing myself to be supported, I discovered the deep resilience that comes from connection. My family didn't "fix" me, but they created a safe container for my healing.</p>
+                    
+                    <p>If you're struggling, consider reaching out to someone you trust. You don't have to carry your burden alone. Sometimes the bravest thing we can do is allow others to help us.</p>
+                </div>
+                
+                <div class="modal-tags">
+                    <span class="modal-tag">Family Support</span>
+                    <span class="modal-tag">Depression</span>
+                    <span class="modal-tag">Therapy</span>
+                    <span class="modal-tag">Connection</span>
+                    <span class="modal-tag">Recovery</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Story 5 Modal -->
+    <div class="story-modal" id="story-5">
+        <div class="modal-content">
+            <button class="modal-close">&times;</button>
+            <div class="modal-header">
+                <div class="modal-header-image">
+                    <img src="https://images.unsplash.com/photo-1545167622-3a6ac756afa4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Alex with friends">
+                </div>
+                <h2 class="modal-title">How Friends Saved Me</h2>
+                <div class="modal-meta">
+                    <span><i class="fas fa-user"></i> Alex P. (South Africa)</span>
+                    <span><i class="fas fa-clock"></i> 5 weeks ago</span>
+                                        <span><i class="fas fa-comments"></i> 29 comments</span>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="modal-text">
+                    <p>I was isolating myself in my depression when my friends intervened. For months, I had been canceling plans, making excuses, and withdrawing from everyone. The darkness of depression made me believe I was a burden and that my friends would be better off without me.</p>
+                    
+                    <p>One evening, three of my closest friends showed up at my door unannounced. They didn't come with judgment or frustration, but with love and concern. They had prepared a meal and simply sat with me in my apartment. That night, they gently expressed their concern and helped me realize how much I had withdrawn.</p>
+                    
+                    <p>Their intervention was the turning point I needed. They helped me find a therapist and even took turns driving me to my appointments when I lacked the motivation to go. They created a rotating schedule where one of them would check in on me daily, sometimes in person, sometimes just a text message.</p>
+                    
+                    <p>What made their support so effective was that they educated themselves about depression. They learned that it wasn't about cheering me up or offering solutions, but about being present without judgment. They gave me space when I needed it but never let me completely isolate.</p>
+                    
+                    <p>We established a "code word" system where I could signal when I was struggling without having to explain everything. Sometimes I'd just text "rough day" and they'd know to check in more frequently or bring over some food.</p>
+                    
+                    <p>As I gradually emerged from the depths of depression, I realized how fortunate I was to have friends who refused to give up on me. Their persistence, compassion, and unconditional support literally saved my life.</p>
+                    
+                    <p>Now, we're more open about mental health in our friend group. We check in on each other regularly and have created a culture where it's safe to share struggles without shame. My experience taught all of us the power of compassionate friendship.</p>
+                    
+                    <p>If you notice a friend withdrawing, don't assume they need space - they might need exactly the opposite. Reach out, be persistent but gentle, and let them know they're not alone.</p>
+                </div>
+                
+                <div class="modal-tags">
+                    <span class="modal-tag">Friendship</span>
+                    <span class="modal-tag">Intervention</span>
+                    <span class="modal-tag">Support System</span>
+                    <span class="modal-tag">Depression</span>
+                    <span class="modal-tag">Compassion</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Story 6 Modal -->
+    <div class="story-modal" id="story-6">
+        <div class="modal-content">
+            <button class="modal-close">&times;</button>
+            <div class="modal-header">
+                <div class="modal-header-image">
+                    <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Rachel at work">
+                </div>
+                <h2 class="modal-title">Overcoming Workplace Anxiety</h2>
+                <div class="modal-meta">
+                    <span><i class="fas fa-user"></i> Rachel S. (India)</span>
+                    <span><i class="fas fa-clock"></i> 6 weeks ago</span>
+                    <span><i class="fas fa-comments"></i> 37 comments</span>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="modal-text">
+                    <p>My anxiety was affecting my career until I found a coach who taught me practical techniques to manage stress and build confidence. As a software engineer in a competitive tech company, I constantly felt like I wasn't good enough despite evidence to the contrary.</p>
+                    
+                    <p>My anxiety manifested as perfectionism, overworking, and fear of speaking up in meetings. I would spend hours perfecting code that was already functional, terrified of making mistakes. Presentations would leave me physically ill with worry for days in advance.</p>
+                    
+                    <p>The breaking point came during a performance review when my manager noted that my work was excellent but I wasn't showcasing my contributions or taking on leadership opportunities. I realized my anxiety was holding me back professionally.</p>
+                    
+                    <p>I started working with an anxiety coach who specialized in workplace issues. She helped me understand that my anxiety was rooted in childhood patterns of needing to be "perfect" to feel worthy. Together, we developed practical strategies to manage my anxiety.</p>
+                    
+                    <p>We implemented a "three breath" technique before speaking in meetings, which helped calm my nervous system. I learned to reframe mistakes as learning opportunities rather than personal failures. My coach had me keep an "evidence log" where I recorded positive feedback and accomplishments to combat my imposter syndrome.</p>
+                    
+                    <p>Gradually, I started taking small risks - volunteering for projects outside my comfort zone, speaking up earlier in meetings, and sharing my ideas more freely. To my surprise, my contributions were well-received, which built my confidence.</p>
+                    
+                    <p>I also learned to set better boundaries around work. Instead of working late to perfect everything, I focused on prioritizing tasks and accepting "good enough" for lower-priority items. This actually improved my productivity and reduced my burnout.</p>
+                    
+                    <p>Today, I still experience anxiety, but it no longer controls my career decisions. I've been promoted twice and now mentor junior engineers who struggle with similar issues. My journey taught me that anxiety doesn't have to be a barrier to professional success.</p>
+                </div>
+                
+                <div class="modal-tags">
+                    <span class="modal-tag">Work Anxiety</span>
+                    <span class="modal-tag">Coaching</span>
+                    <span class="modal-tag">Confidence</span>
+                    <span class="modal-tag">Perfectionism</span>
+                    <span class="modal-tag">Professional Growth</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Story 7 Modal -->
+    <div class="story-modal" id="story-7">
+        <div class="modal-content">
+            <button class="modal-close">&times;</button>
+            <div class="modal-header">
+                <div class="modal-header-image">
+                    <img src="https://images.unsplash.com/photo-1516585427167-9f4af9627e6c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Mark hiking">
+                </div>
+                <h2 class="modal-title">Nature's Healing Power</h2>
+                <div class="modal-meta">
+                    <span><i class="fas fa-user"></i> Mark T. (New Zealand)</span>
+                    <span><i class="fas fa-clock"></i> 3 months ago</span>
+                    <span><i class="fas fa-comments"></i> 52 comments</span>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="modal-text">
+                    <p>After my divorce, I fell into a deep depression. The end of my 15-year marriage left me questioning my identity and future. I tried therapy and medication, which helped, but I still felt a profound emptiness that nothing seemed to fill.</p>
+                    
+                    <p>It was my brother who suggested we go on a weekend hiking trip. Reluctantly, I agreed. Those two days in nature were the first time in months that I felt a glimmer of peace. The physical exertion, the beauty of the landscape, and the simplicity of being outdoors quieted my racing thoughts.</p>
+                    
+                    <p>I started hiking every weekend, gradually tackling more challenging trails. The rhythm of walking became a moving meditation for me. In nature, I found a perspective that was hard to access in my daily life - the realization that I was part of something larger than my personal struggles.</p>
+                    
+                    <p>I began to practice mindfulness during my hikes, consciously engaging all my senses. I would focus on the sound of birds, the smell of damp earth, the feel of the wind on my skin. This practice pulled me out of my rumination and into the present moment.</p>
+                    
+                    <p>Over time, I started to notice parallels between the trails I hiked and my emotional journey. Some paths were steep and challenging, others offered peaceful stretches. Sometimes the view was obscured by fog, only to reveal breathtaking vistas when the weather cleared. These metaphors helped me accept the ups and downs of my healing process.</p>
+                    
+                    <p>I joined a hiking group for people dealing with life transitions, which provided both community and accountability. Sharing stories around campfires created bonds that supported my recovery in ways I hadn't anticipated.</p>
+                    
+                    <p>Nature didn't "cure" my depression, but it provided the space and perspective I needed to heal. The combination of physical activity, natural beauty, and mindful presence became my most powerful tool for managing my mental health.</p>
+                    
+                    <p>Today, I still turn to nature whenever I feel overwhelmed or disconnected. The trails have taught me resilience, patience, and the healing power of simply showing up and putting one foot in front of the other.</p>
+                </div>
+                
+                <div class="modal-tags">
+                    <span class="modal-tag">Nature Therapy</span>
+                    <span class="modal-tag">Divorce</span>
+                    <span class="modal-tag">Self-Discovery</span>
+                    <span class="modal-tag">Mindfulness</span>
+                    <span class="modal-tag">Hiking</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // JavaScript to handle modal functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get all story cards and modals
+            const storyCards = document.querySelectorAll('.story-card');
+            const modals = document.querySelectorAll('.story-modal');
+            const closeButtons = document.querySelectorAll('.modal-close');
+            
+            // Add click event to each story card
+            storyCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    const storyId = this.getAttribute('data-story');
+                    const modal = document.getElementById(`story-${storyId}`);
+                    
+                    // Show the corresponding modal
+                    if (modal) {
+                        modal.classList.add('active');
+                        document.body.style.overflow = 'hidden'; // Prevent background scrolling
+                    }
+                });
+            });
+            
+            // Add click event to close buttons
+            closeButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const modal = this.closest('.story-modal');
+                    modal.classList.remove('active');
+                    document.body.style.overflow = ''; // Re-enable scrolling
+                });
+            });
+            
+            // Close modal when clicking outside content
+            modals.forEach(modal => {
+                modal.addEventListener('click', function(e) {
+                    if (e.target === this) {
+                        this.classList.remove('active');
+                        document.body.style.overflow = ''; // Re-enable scrolling
+                    }
+                });
+            });
+            
+            // Close modal with Escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    modals.forEach(modal => {
+                        if (modal.classList.contains('active')) {
+                            modal.classList.remove('active');
+                            document.body.style.overflow = ''; // Re-enable scrolling
+                        }
+                    });
+                }
+            });
+            
+            // Prevent modal content click from closing modal
+            const modalContents = document.querySelectorAll('.modal-content');
+            modalContents.forEach(content => {
+                content.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                });
+            });
+        });
+    </script>
+</body>
+</html>

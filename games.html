@@ -1,0 +1,1534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindSoothe - Fun Mental Wellness Games</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #d6c1ff, #a8d0ff, #c3f0f2);
+            color: #2b2b2b;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 25px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        header {
+            background: rgba(0, 0, 0, 0.2);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+        
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            color: black;
+        }
+        
+        .tagline {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            font-weight: bold;
+            color: black;
+        }
+        
+        .content {
+            padding: 40px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .game-card {
+            background: rgba(255, 255, 255, 0.12);
+            border-radius: 20px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            transition: all 0.4s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .game-card:hover {
+            transform: translateY(-10px) scale(1.03);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .game-icon {
+            font-size: 4.5rem;
+            margin-bottom: 20px;
+            color: #fff;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+        }
+        
+        .game-title {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            color: black;
+            position: relative;
+            font-weight: bold;
+        }
+        
+        .game-description {
+            color: black;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        
+        .play-btn {
+            background: linear-gradient(to right, #a8edea, #fed6e3);
+            color: black;
+            border: none;
+            padding: 14px 30px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 20px rgba(255, 126, 95, 0.5);
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+        }
+        
+        .play-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(168, 237, 234, 0.5);
+        }
+        
+        .game-screen {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .game-container {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            padding: 40px;
+            border-radius: 25px;
+            max-width: 900px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            text-align: center;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.5rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s ease;
+            color: white;
+        }
+        
+        .close-btn:hover {
+            background: #ff4757;
+            transform: rotate(90deg);
+        }
+        
+        .game-title-large {
+            color: #fff;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* Break Objects Game */
+        #breakArea {
+            width: 100%;
+            height: 350px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            margin: 20px 0;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            padding: 20px;
+        }
+        
+        .breakable-item {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #c3f0f2, #d6c1ff, #ffd6e8);
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            animation: float 3s infinite ease-in-out;
+        }
+        
+        .breakable-item:nth-child(2n) {
+            animation-delay: 0.5s;
+            background: linear-gradient(135deg, #43cea2, #185a9d);
+        }
+        
+        .breakable-item:nth-child(3n) {
+            animation-delay: 1s;
+            background: linear-gradient(135deg, #ff6b6b, #ff9e6b);
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+        
+        .breakable-item:hover {
+            transform: scale(1.1) rotate(5deg);
+        }
+        
+        
+        /* Bubble Pop Game */
+        #bubbleArea {
+            width: 100%;
+            height: 350px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            margin: 20px 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .bubble {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.2));
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: rgba(0, 0, 0, 0.5);
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease;
+        }
+        
+        .bubble:hover {
+            transform: scale(1.1);
+        }
+        
+        /* Drawing Game */
+        #drawingArea {
+            width: 100%;
+            height: 300px;
+            background: white;
+            border-radius: 15px;
+            margin: 20px 0;
+            cursor: crosshair;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .drawing-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .color-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 3px solid white;
+            cursor: pointer;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+            transition: all 0.2s ease;
+        }
+        
+        .color-btn.active {
+            transform: scale(1.2);
+            box-shadow: 0 0 0 3px #ff7e5f;
+        }
+        
+        .draw-action-btn {
+            padding: 10px 20px;
+            border-radius: 50px;
+            border: none;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+        
+        .draw-action-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        /* Timed Challenge Game */
+        .timer {
+            font-size: 3rem;
+            font-weight: 800;
+            color: #ff7e5f;
+            margin: 20px 0;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .score {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #43cea2;
+            margin: 20px 0;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* Calm Section */
+        .calm-section {
+            margin-top: 30px;
+            padding: 25px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            text-align: center;
+        }
+        
+        .calm-title {
+            color: #fff;
+            margin-bottom: 15px;
+            font-size: 1.8rem;
+        }
+        
+        .breathing-animation {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #a8edea, #d6c1ff);
+            margin: 0 auto;
+            animation: breathe 6s infinite;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        @keyframes breathe {
+            0%, 100% { 
+                transform: scale(0.8);
+                background: radial-gradient(circle at 30% 30%, #43cea2, #185a9d);
+            }
+            50% { 
+                transform: scale(1.2);
+                background: radial-gradient(circle at 30% 30%, #185a9d, #43cea2);
+            }
+        }
+        
+        /* Enhanced Fruit Ninja Style Items */
+        .smash-item {
+            position: absolute;
+            width: 70px;
+            height: 70px;
+            border-radius: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2.2rem;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            transition: transform 0.2s ease;
+            bottom: -80px;
+            user-select: none;
+            z-index: 10;
+        }
+        
+        .smash-item:hover {
+            transform: scale(1.1);
+        }
+        
+        /* Enhanced Mind Garden Game */
+        .garden-container {
+            width: 100%;
+            height: 400px;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 15px;
+            margin: 20px 0;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            background-image: radial-gradient(circle at 50% 100%, rgba(139, 69, 19, 0.3), transparent 70%);
+        }
+        
+        .garden-ground {
+            width: 100%;
+            height: 120px;
+            background: linear-gradient(to top, #8B4513, #6b3409);
+            position: absolute;
+            bottom: 0;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+            box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .garden-sky {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: calc(100% - 120px);
+            background: linear-gradient(to bottom, #d6c1ff, #a8d0ff);
+            opacity: 0.3;
+            border-radius: 15px 15px 0 0;
+        }
+        
+        .plant-btn {
+            margin: 10px 5px;
+            padding: 12px 18px;
+            border: none;
+            border-radius: 25px;
+            background: linear-gradient(to right, #43cea2, #185a9d);
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .plant-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .plant {
+            position: absolute;
+            bottom: 120px;
+            transition: all 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            text-align: center;
+            user-select: none;
+            z-index: 5;
+        }
+        
+        .plant i {
+            font-size: 2.5rem;
+            color: #43cea2;
+            text-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+            transition: all 0.5s ease;
+        }
+        
+        .plant-text {
+            font-size: 0.9rem;
+            margin-top: 8px;
+            color: white;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 4px 10px;
+            border-radius: 15px;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            font-weight: 500;
+        }
+        
+        .plant:hover .plant-text {
+            opacity: 1;
+        }
+        
+        .plant:hover i {
+            transform: scale(1.2);
+            filter: brightness(1.2) drop-shadow(0 3px 6px rgba(0, 0, 0, 0.4));
+        }
+        
+        .garden-score {
+            font-size: 1.2rem;
+            margin: 15px 0;
+            color: #43cea2;
+            font-weight: 600;
+        }
+        
+        /* Enhanced Timer Styles */
+        .timer-container {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 20px;
+        }
+        
+        .timer-circle {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: conic-gradient(#ff7e5f 0%, #ff7e5f var(--progress, 0%), rgba(255, 255, 255, 0.1) var(--progress, 0%));
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 0 20px rgba(255, 126, 95, 0.4);
+        }
+        
+        .timer-text {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* Enhanced Game Controls */
+        .game-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .control-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 25px;
+            background: linear-gradient(to right, #6e8efb, #a777e3);
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .control-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .control-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        /* Enhanced Results Screen */
+        .results-screen {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 25px;
+            margin-top: 20px;
+            animation: fadeIn 0.8s ease;
+        }
+        
+        .results-title {
+            font-size: 2rem;
+            margin-bottom: 15px;
+            color: #43cea2;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .results-score {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: #ff7e5f;
+            margin: 10px 0;
+            text-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+        }
+        
+        .results-message {
+            font-size: 1.2rem;
+            margin: 15px 0;
+            line-height: 1.6;
+        }
+        
+        .reward-badge {
+            font-size: 4rem;
+            margin: 20px 0;
+            animation: bounce 1s infinite alternate;
+        }
+        
+        @keyframes bounce {
+            from { transform: translateY(0); }
+            to { transform: translateY(-15px); }
+        }
+        
+        footer {
+            text-align: center;
+            padding: 30px;
+            color: black;
+            font-size: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.1);
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                grid-template-columns: 1fr;
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .game-container {
+                padding: 25px;
+            }
+            
+            #breakArea, #breakAreaChallenge {
+                height: 300px;
+            }
+            
+            .timer-container {
+                width: 100px;
+                height: 100px;
+            }
+            
+            .timer-text {
+                font-size: 1.8rem;
+            }
+            
+            .game-controls {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .control-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>MindSoothe</h1>
+            <p class="tagline">Fun & Innovative Mental Wellness Games</p>
+        </header>
+        
+        <div class="content">
+            <!-- Break Objects Game -->
+            <div class="game-card" data-game="breakObjects">
+                <div class="game-icon">
+                    <i class="fas fa-bomb"></i>
+                </div>
+                <h3 class="game-title">Stress Smash</h3>
+                <p class="game-description">Release tension by smashing virtual objects. Cathartic and satisfying without the mess!</p>
+                <button class="play-btn">Smash Now</button>
+            </div>
+            
+            <!-- Bubble Pop Game -->
+            <div class="game-card" data-game="bubblePop">
+                <div class="game-icon">
+                    <i class="fas fa-bubbles"></i>
+                </div>
+                <h3 class="game-title">Bubble Pop</h3>
+                <p class="game-description">Pop colorful bubbles in this satisfying stress-relief game. Soothing visuals and sounds.</p>
+                <button class="play-btn">Start Popping</button>
+            </div>
+            
+            <!-- Creative Destruction -->
+            <div class="game-card" data-game="creativeDestruction">
+                <div class="game-icon">
+                    <i class="fas fa-paint-brush"></i>
+                </div>
+                <h3 class="game-title">Creative Release</h3>
+                <p class="game-description">Draw or write what's bothering you, then destroy it in creative and satisfying ways.</p>
+                <button class="play-btn">Create & Destroy</button>
+            </div>
+            
+            <!-- Timed Challenge -->
+            <div class="game-card" data-game="timedChallenge">
+                <div class="game-icon">
+                    <i class="fas fa-stopwatch"></i>
+                </div>
+                <h3 class="game-title">30-Second Smash</h3>
+                <p class="game-description">Race against the clock to break as many items as possible, followed by a calming cooldown.</p>
+                <button class="play-btn">Take Challenge</button>
+            </div>
+            
+            <!-- Breath Harmony -->
+            <div class="game-card" data-game="breathHarmony">
+                <div class="game-icon">
+                    <i class="fas fa-wind"></i>
+                </div>
+                <h3 class="game-title">Breath Harmony</h3>
+                <p class="game-description">Sync your breathing with beautiful visual patterns to find your calm center.</p>
+                <button class="play-btn">Breathe Now</button>
+            </div>
+            
+            <!-- Mind Garden -->
+            <div class="game-card" data-game="mindGarden">
+                <div class="game-icon">
+                    <i class="fas fa-seedling"></i>
+                </div>
+                <h3 class="game-title">Mind Garden</h3>
+                <p class="game-description">Grow a beautiful garden of positive thoughts and watch them flourish with attention.</p>
+                <button class="play-btn">Start Gardening</button>
+            </div>
+        </div>
+        
+        <!-- Break Objects Game Screen -->
+        <div class="game-screen" id="breakObjectsScreen">
+            <div class="game-container">
+                <button class="close-btn">&times;</button>
+                <h2 class="game-title-large">Stress Smash</h2>
+                <p style="color: white; display: inline;">Click on objects to smash them. They'll respawn for endless stress relief!</p>
+                
+                <div id="breakArea">
+                    <!-- Objects will be generated by JavaScript -->
+                </div>
+                
+                <div class="calm-section">
+                    <h3 class="calm-title">Time to calm down</h3>
+                    <p style="color: white; display: inline;">Follow the breathing animation for 30 seconds</p>
+                    <div class="breathing-animation">Breathe</div>
+                    <p style="color: white; display: inline;">Breathe in as it expands, breathe out as it contracts</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Bubble Pop Game Screen -->
+        <div class="game-screen" id="bubblePopScreen">
+            <div class="game-container">
+                <button class="close-btn">&times;</button>
+                <h2 class="game-title-large">Bubble Pop</h2>
+                <p style="color: white; display: inline;">Pop bubbles as they float by. Focus on the satisfying pops and watch your stress melt away!</p>
+                
+                <div id="bubbleArea">
+                    <!-- Bubbles will be generated by JavaScript -->
+                </div>
+                
+                <div class="score">Bubbles popped: <span id="bubbleCount">0</span></div>
+                
+                <div class="calm-section">
+                    <h3 class="calm-title">Relaxation Time</h3>
+                    <p style="color: white; display: inline;">Take a moment to breathe with the animation</p>
+                    <div class="breathing-animation">Breathe</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Creative Destruction Game Screen -->
+        <div class="game-screen" id="creativeDestructionScreen">
+            <div class="game-container">
+                <button class="close-btn">&times;</button>
+                <h2 class="game-title-large">Creative Release</h2>
+                <p style="color: white; display: inline;">Draw or write what's bothering you, then click destroy to watch it disappear in a satisfying way.</p>
+                
+                <canvas id="drawingArea" width="800" height="300"></canvas>
+                
+                <div class="drawing-controls">
+                    <div class="color-btn" style="background-color: #ff6b6b;" data-color="#ff6b6b"></div>
+                    <div class="color-btn" style="background-color: #43cea2;" data-color="#43cea2"></div>
+                    <div class="color-btn" style="background-color: #185a9d;" data-color="#185a9d"></div>
+                    <div class="color-btn" style="background-color: #ff7e5f;" data-color="#ff7e5f"></div>
+                    <div class="color-btn" style="background-color: #000000;" data-color="#000000"></div>
+                    <button class="draw-action-btn" id="clearBtn">Clear</button>
+                    <button class="draw-action-btn" id="destroyBtn">Destroy</button>
+                </div>
+                
+                <div class="calm-section">
+                    <h3 class="calm-title">Let It Go</h3>
+                    <p style="color: white; display: inline;">As your creation disappears, visualize releasing negative thoughts</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Enhanced Timed Challenge Game Screen -->
+        <div class="game-screen" id="timedChallengeScreen">
+            <div class="game-container">
+                <button class="close-btn">&times;</button>
+                <h2 class="game-title-large">30-Second Smash Challenge</h2>
+                <p style="color: white; display: inline;">Break as many stress symbols as you can in 30 seconds! When time's up, we'll guide you through a calming cooldown.</p>
+                
+                <div class="timer-container">
+                    <div class="timer-circle" id="timerCircle">
+                        <div class="timer-text" id="challengeTimer">30</div>
+                    </div>
+                </div>
+                
+                <div class="score">Items broken: <span id="itemsBroken">0</span></div>
+                
+                <div id="breakAreaChallenge" style="width: 100%; height: 350px; background: rgba(0, 0, 0, 0.2); border-radius: 15px; margin: 20px 0; position: relative; overflow: hidden;">
+                    <!-- Stress symbols will be generated by JavaScript -->
+                </div>
+                
+                <div class="game-controls">
+                    <button class="control-btn" id="startChallengeBtn">
+                        <i class="fas fa-play"></i> Start Challenge
+                    </button>
+                    <button class="control-btn" id="restartChallengeBtn" disabled>
+                        <i class="fas fa-redo"></i> Try Again
+                    </button>
+                </div>
+                
+                <div class="calm-section" id="challengeCalmSection" style="display: none;">
+                    <div class="results-screen">
+                        <h3 class="results-title">Challenge Complete!</h3>
+                        <div class="reward-badge">🏆</div>
+                        <div class="results-score" id="finalScore">0</div>
+                        <p class="results-message" id="resultsMessage">Great job releasing that stress!</p>
+                        <p>Follow the breathing animation to calm your body after the excitement</p>
+                    </div>
+                    <div class="breathing-animation">Breathe</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Enhanced Mind Garden Game Screen -->
+        <div class="game-screen" id="mindGardenScreen">
+            <div class="game-container">
+                <button class="close-btn">&times;</button>
+                <h2 class="game-title-large">Mind Garden</h2>
+                <p style="color: white; display: inline;">Plant positive thoughts in your garden and watch them grow. Click on plants to help them flourish!</p>
+                
+                <div class="garden-score">Plants nurtured: <span id="plantScore">0</span></div>
+                
+                <div class="garden-container">
+                    <div class="garden-sky"></div>
+                    <div class="garden-ground"></div>
+                    <!-- Plants will be added here by JavaScript -->
+                </div>
+                
+                <div class="game-controls">
+                    <button class="plant-btn" data-plant="seedling">
+                        <i class="fas fa-seedling"></i> Plant Hope
+                    </button>
+                    <button class="plant-btn" data-plant="heart">
+                        <i class="fas fa-heart"></i> Plant Love
+                    </button>
+                    <button class="plant-btn" data-plant="smile">
+                        <i class="fas fa-smile"></i> Plant Joy
+                    </button>
+                    <button class="plant-btn" data-plant="sun">
+                        <i class="fas fa-sun"></i> Plant Positivity
+                    </button>
+                    <button class="plant-btn" data-plant="star">
+                        <i class="fas fa-star"></i> Plant Dreams
+                    </button>
+                </div>
+                
+                <div class="calm-section">
+                    <h3 class="calm-title">Nurture Your Mind</h3>
+                    <p style="color: white; display: inline;">Just like plants, positive thoughts grow stronger with attention and care. Each time you click a plant, you're strengthening positive neural pathways!</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Breath Harmony Game Screen -->
+        <div class="game-screen" id="breathHarmonyScreen">
+            <div class="game-container">
+                <button class="close-btn">&times;</button>
+                <h2 class="game-title-large">Breath Harmony</h2>
+                
+                <div class="breath-instructions">
+                    <p style="color: white; display: inline;">Follow the animation to practice deep breathing:</p>
+                    <p style="color: white; display: inline;">Breathe IN as the circle expands (4 seconds)</p>
+                    <p style="color: white; display: inline;">Hold your breath (4 seconds)</p>
+                    <p style="color: white; display: inline;">Breathe OUT as the circle contracts (6 seconds)</p>
+                </div>
+                
+                <div class="breath-container">
+                    <div class="breath-circle" id="breathCircle">Breathe</div>
+                </div>
+                
+                <div class="calm-section">
+                    <h3 class="calm-title">Benefits of Deep Breathing</h3>
+                    <p style="color: white; display: inline;">Reduces stress, lowers blood pressure, and helps calm your mind and body.</p>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>MindSoothe &copy; 2023 | Fun & Innovative Mental Wellness Games</p>
+            <p>These games are designed to provide a relaxing escape and build mental wellness skills.</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Game navigation
+            const gameCards = document.querySelectorAll('.game-card');
+            const gameScreens = document.querySelectorAll('.game-screen');
+            const closeButtons = document.querySelectorAll('.close-btn');
+            
+            // Show game screen when a card is clicked
+            gameCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    const gameId = this.getAttribute('data-game');
+                    document.getElementById(`${gameId}Screen`).style.display = 'flex';
+                    
+                    // Initialize the specific game
+                    if (gameId === 'breakObjects') {
+                        initBreakObjectsGame();
+                    } else if (gameId === 'bubblePop') {
+                        initBubblePopGame();
+                    } else if (gameId === 'creativeDestruction') {
+                        initCreativeDestructionGame();
+                    } else if (gameId === 'timedChallenge') {
+                        initTimedChallengeGame();
+                    } else if (gameId === 'breathHarmony') {
+                        initBreathHarmonyGame();
+                    } else if (gameId === 'mindGarden') {
+                        initMindGardenGame();
+                    }
+                });
+            });
+            
+            // Close game screen when close button is clicked
+            closeButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    this.closest('.game-screen').style.display = 'none';
+                });
+            });
+            
+            // Break Objects Game
+            function initBreakObjectsGame() {
+                const breakArea = document.getElementById('breakArea');
+                breakArea.innerHTML = '';
+                
+                // Create breakable items
+                const items = ['💣', '🔥', '💢', '😠', '😤', '👎', '❗', '❌'];
+                
+                for (let i = 0; i < 12; i++) {
+                    const item = document.createElement('div');
+                    item.className = 'breakable-item';
+                    item.innerHTML = items[Math.floor(Math.random() * items.length)];
+                    
+                    item.addEventListener('click', function() {
+                        // Break animation
+                        this.style.transform = 'scale(1.5) rotate(360deg)';
+                        this.style.opacity = '0';
+                        
+                        // Remove after animation
+                        setTimeout(() => {
+                            this.remove();
+                            
+                            // Add new item after a delay
+                            setTimeout(() => {
+                                if (breakArea.children.length < 15) {
+                                    addBreakableItem(breakArea, items);
+                                }
+                            }, 500);
+                        }, 300);
+                    });
+                    
+                    breakArea.appendChild(item);
+                }
+            }
+            
+            function addBreakableItem(container, items) {
+                const item = document.createElement('div');
+                item.className = 'breakable-item';
+                item.innerHTML = items[Math.floor(Math.random() * items.length)];
+                
+                item.addEventListener('click', function() {
+                    this.style.transform = 'scale(1.5) rotate(360deg)';
+                    this.style.opacity = '0';
+                    
+                    setTimeout(() => {
+                        this.remove();
+                        
+                        setTimeout(() => {
+                            if (container.children.length < 15) {
+                                addBreakableItem(container, items);
+                            }
+                        }, 500);
+                    }, 300);
+                });
+                
+                container.appendChild(item);
+            }
+            
+            // Bubble Pop Game
+            function initBubblePopGame() {
+                const bubbleArea = document.getElementById('bubbleArea');
+                const bubbleCount = document.getElementById('bubbleCount');
+                bubbleArea.innerHTML = '';
+                bubbleCount.textContent = '0';
+                
+                let count = 0;
+                
+                // Create bubbles at intervals
+                const bubbleInterval = setInterval(() => {
+                    if (document.getElementById('bubblePopScreen').style.display !== 'flex') {
+                        clearInterval(bubbleInterval);
+                        return;
+                    }
+                    
+                    createBubble(bubbleArea);
+                }, 800);
+                
+                function createBubble(container) {
+                    const bubble = document.createElement('div');
+                    bubble.className = 'bubble';
+                    
+                    const size = Math.random() * 60 + 30;
+                    bubble.style.width = `${size}px`;
+                    bubble.style.height = `${size}px`;
+                    
+                    // Random position
+                    const leftPos = Math.random() * (container.offsetWidth - size);
+                    bubble.style.left = `${leftPos}px`;
+                    bubble.style.bottom = '0px';
+                    
+                    // Random rise speed
+                    const riseSpeed = Math.random() * 4 + 2;
+                    
+                    // Pop on click
+                    bubble.addEventListener('click', function() {
+                        this.style.transform = 'scale(1.3)';
+                        this.style.opacity = '0';
+                        
+                        count++;
+                        bubbleCount.textContent = count;
+                        
+                        setTimeout(() => {
+                            this.remove();
+                        }, 200);
+                    });
+                    
+                    container.appendChild(bubble);
+                    
+                    // Animate bubble rising
+                    let position = 0;
+                    const rise = setInterval(() => {
+                        if (document.getElementById('bubblePopScreen').style.display !== 'flex') {
+                            clearInterval(rise);
+                            return;
+                        }
+                        
+                        position += riseSpeed;
+                        bubble.style.bottom = `${position}px`;
+                        
+                        // Remove if out of view
+                        if (position > container.offsetHeight) {
+                            clearInterval(rise);
+                            bubble.remove();
+                        }
+                    }, 30);
+                }
+            }
+            
+            // Creative Destruction Game
+            function initCreativeDestructionGame() {
+                const canvas = document.getElementById('drawingArea');
+                const ctx = canvas.getContext('2d');
+                const colorButtons = document.querySelectorAll('.color-btn');
+                const clearBtn = document.getElementById('clearBtn');
+                const destroyBtn = document.getElementById('destroyBtn');
+                
+                let isDrawing = false;
+                let lastX = 0;
+                let lastY = 0;
+                let hue = 0;
+                let direction = true;
+                let currentColor = '#ff6b6b';
+                
+                // Set initial background
+                ctx.fillStyle = 'white';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                // Set up drawing
+                function draw(e) {
+                    if (!isDrawing) return;
+                    
+                    ctx.strokeStyle = currentColor;
+                    ctx.lineWidth = 5;
+                    ctx.lineCap = 'round';
+                    ctx.lineJoin = 'round';
+                    
+                    ctx.beginPath();
+                    ctx.moveTo(lastX, lastY);
+                    ctx.lineTo(e.offsetX, e.offsetY);
+                    ctx.stroke();
+                    
+                    [lastX, lastY] = [e.offsetX, e.offsetY];
+                    
+                    // Color cycling for rainbow effect
+                    hue++;
+                    if (hue >= 360) {
+                        hue = 0;
+                    }
+                }
+                
+                canvas.addEventListener('mousedown', (e) => {
+                    isDrawing = true;
+                    [lastX, lastY] = [e.offsetX, e.offsetY];
+                });
+                
+                canvas.addEventListener('mousemove', draw);
+                canvas.addEventListener('mouseup', () => isDrawing = false);
+                canvas.addEventListener('mouseout', () => isDrawing = false);
+                
+                // Color selection
+                colorButtons.forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        currentColor = this.getAttribute('data-color');
+                        colorButtons.forEach(b => b.classList.remove('active'));
+                        this.classList.add('active');
+                    });
+                });
+                
+                // Set first color as active
+                colorButtons[0].classList.add('active');
+                
+                // Clear canvas
+                clearBtn.addEventListener('click', function() {
+                    ctx.fillStyle = 'white';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                });
+                
+                // Destroy animation
+                destroyBtn.addEventListener('click', function() {
+                    let particles = [];
+                    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                    const data = imageData.data;
+                    
+                    // Create particles from drawn pixels
+                    for (let y = 0; y < canvas.height; y += 5) {
+                        for (let x = 0; x < canvas.width; x += 5) {
+                            const index = (y * canvas.width + x) * 4;
+                            if (data[index + 3] > 0) { // If pixel is not transparent
+                                particles.push({
+                                    x: x,
+                                    y: y,
+                                    color: `rgba(${data[index]}, ${data[index + 1]}, ${data[index + 2]}, ${data[index + 3] / 255})`,
+                                    speed: Math.random() * 5 + 2,
+                                    angle: Math.random() * Math.PI * 2,
+                                    size: Math.random() * 3 + 1
+                                });
+                            }
+                        }
+                    }
+                    
+                    // Clear canvas
+                    ctx.fillStyle = 'white';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    
+                    // Animate particles
+                    const animateParticles = () => {
+                        ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
+                        ctx.fillRect(0, 0, canvas.width, canvas.height);
+                        
+                        particles = particles.filter(particle => {
+                            particle.x += Math.cos(particle.angle) * particle.speed;
+                            particle.y += Math.sin(particle.angle) * particle.speed;
+                            particle.speed *= 0.98; // Slow down
+                            
+                            ctx.fillStyle = particle.color;
+                            ctx.beginPath();
+                            ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+                            ctx.fill();
+                            
+                            // Keep particles that are still visible
+                            return particle.speed > 0.1 && 
+                                   particle.x > 0 && particle.x < canvas.width &&
+                                   particle.y > 0 && particle.y < canvas.height;
+                        });
+                        
+                        if (particles.length > 0) {
+                            requestAnimationFrame(animateParticles);
+                        }
+                    };
+                    
+                    animateParticles();
+                });
+            }
+            
+            // Enhanced Timed Challenge Game
+            function initTimedChallengeGame() {
+                const timerElement = document.getElementById('challengeTimer');
+                const timerCircle = document.getElementById('timerCircle');
+                const itemsBrokenElement = document.getElementById('itemsBroken');
+                const finalScoreElement = document.getElementById('finalScore');
+                const resultsMessageElement = document.getElementById('resultsMessage');
+                const breakArea = document.getElementById('breakAreaChallenge');
+                const startBtn = document.getElementById('startChallengeBtn');
+                const restartBtn = document.getElementById('restartChallengeBtn');
+                const calmSection = document.getElementById('challengeCalmSection');
+                
+                let timeLeft = 30;
+                let brokenCount = 0;
+                let gameInterval;
+                let itemInterval;
+                
+                // Stress symbols for the game
+                const stressSymbols = ['💣', '🔥', '💢', '😠', '😤', '👎', '❗', '❌'];
+                
+                // Reset game state
+                resetGame();
+                
+                startBtn.addEventListener('click', startChallenge);
+                restartBtn.addEventListener('click', resetGame);
+                
+                function resetGame() {
+                    timeLeft = 30;
+                    brokenCount = 0;
+                    
+                    timerElement.textContent = timeLeft;
+                    timerCircle.style.setProperty('--progress', '0%');
+                    itemsBrokenElement.textContent = brokenCount;
+                    startBtn.disabled = false;
+                    restartBtn.disabled = true;
+                    calmSection.style.display = 'none';
+                    breakArea.innerHTML = '';
+                    
+                    // Clear any existing intervals
+                    clearInterval(gameInterval);
+                    clearInterval(itemInterval);
+                }
+                
+                function startChallenge() {
+                    timeLeft = 30;
+                    brokenCount = 0;
+                    
+                    timerElement.textContent = timeLeft;
+                    itemsBrokenElement.textContent = brokenCount;
+                    startBtn.disabled = true;
+                    calmSection.style.display = 'none';
+                    breakArea.innerHTML = '';
+                    
+                    // Create stress symbols at intervals
+                    itemInterval = setInterval(() => {
+                        if (timeLeft <= 0) {
+                            clearInterval(itemInterval);
+                            return;
+                        }
+                        createStressSymbol();
+                    }, 600);
+                    
+                    // Start timer
+                    gameInterval = setInterval(() => {
+                        timeLeft--;
+                        const progress = ((30 - timeLeft) / 30) * 100;
+                        timerCircle.style.setProperty('--progress', `${progress}%`);
+                        timerElement.textContent = timeLeft;
+                        
+                        if (timeLeft <= 0) {
+                            clearInterval(gameInterval);
+                            clearInterval(itemInterval);
+                            endChallenge();
+                        }
+                    }, 1000);
+                }
+                
+                function createStressSymbol() {
+                    const symbol = document.createElement('div');
+                    symbol.className = 'smash-item';
+                    
+                    // Random stress symbol
+                    const symbolEmoji = stressSymbols[Math.floor(Math.random() * stressSymbols.length)];
+                    symbol.innerHTML = symbolEmoji;
+                    
+                    // Random horizontal position
+                    const leftPos = Math.random() * 80 + 10; // 10% to 90%
+                    symbol.style.left = `${leftPos}%`;
+                    
+                    // Random appearance
+                    const size = Math.random() * 20 + 60; // 60px to 80px
+                    symbol.style.width = `${size}px`;
+                    symbol.style.height = `${size}px`;
+                    symbol.style.fontSize = `${size/2.5}px`;
+                    
+                    // Random color based on symbol type
+                    const colors = ['#ff7e5f', '#ff6b6b', '#feb47b', '#ff4757', '#ff3838'];
+                    symbol.style.background = `linear-gradient(135deg, ${colors[Math.floor(Math.random() * colors.length)]}, ${colors[Math.floor(Math.random() * colors.length)]})`;
+                    
+                    // Add to game area
+                    breakArea.appendChild(symbol);
+                    
+                    // Animate symbol rising
+                    let position = -80;
+                    const riseSpeed = Math.random() * 5 + 3; // 3 to 8
+                    
+                    const riseInterval = setInterval(() => {
+                        if (timeLeft <= 0 || document.getElementById('timedChallengeScreen').style.display !== 'flex') {
+                            clearInterval(riseInterval);
+                            symbol.remove();
+                            return;
+                        }
+                        
+                        position += riseSpeed;
+                        symbol.style.bottom = `${position}px`;
+                        
+                        // Remove if out of view
+                        if (position > breakArea.offsetHeight) {
+                            clearInterval(riseInterval);
+                            symbol.remove();
+                        }
+                    }, 30);
+                    
+                    // Break symbol on click
+                    symbol.addEventListener('click', function() {
+                        if (timeLeft <= 0) return;
+                        
+                        // Break animation
+                        this.style.transform = 'scale(1.5) rotate(360deg)';
+                        this.style.opacity = '0';
+                        
+                        // Increase count
+                        brokenCount++;
+                        itemsBrokenElement.textContent = brokenCount;
+                        
+                        // Remove after animation
+                        setTimeout(() => {
+                            this.remove();
+                        }, 300);
+                        
+                        // Clear the rise interval
+                        clearInterval(riseInterval);
+                    });
+                }
+                
+                function endChallenge() {
+                    // Show calm section and results
+                    calmSection.style.display = 'block';
+                    finalScoreElement.textContent = brokenCount;
+                    
+                    // Set appropriate message based on score
+                    if (brokenCount >= 25) {
+                        resultsMessageElement.textContent = "Amazing! You released a tremendous amount of stress! 🎉";
+                    } else if (brokenCount >= 15) {
+                        resultsMessageElement.textContent = "Great job! You've successfully released plenty of tension! 👍";
+                    } else if (brokenCount >= 8) {
+                        resultsMessageElement.textContent = "Good effort! You've made a solid start on stress relief. 💪";
+                    } else {
+                        resultsMessageElement.textContent = "Every bit helps! Remember that even small efforts count toward stress relief. 🌱";
+                    }
+                    
+                    // Remove all symbols
+                    breakArea.innerHTML = '';
+                    
+                    // Enable restart button
+                    restartBtn.disabled = false;
+                }
+            }
+            
+            // Enhanced Mind Garden Game
+            function initMindGardenGame() {
+                const gardenContainer = document.querySelector('.garden-container');
+                const plantScoreElement = document.getElementById('plantScore');
+                const plantButtons = document.querySelectorAll('.plant-btn');
+                
+                let plantScore = 0;
+                let plantCount = 0;
+                const maxPlants = 8;
+                
+                // Clear existing plants except the ground and sky
+                const plants = document.querySelectorAll('.plant');
+                plants.forEach(plant => plant.remove());
+                
+                // Add plant on button click
+                plantButtons.forEach(button => {
+                    button.addEventListener('click', function() {
+                        if (plantCount >= maxPlants) {
+                            alert("Your garden is full! Nurture the plants you have or restart your garden.");
+                            return;
+                        }
+                        
+                        const plantType = this.getAttribute('data-plant');
+                        addPlantToGarden(plantType);
+                        plantCount++;
+                    });
+                });
+                
+                function addPlantToGarden(type) {
+                    const plant = document.createElement('div');
+                    plant.className = 'plant';
+                    
+                    // Set plant position (random horizontal position)
+                    const leftPos = Math.random() * 80 + 10; // 10% to 90%
+                    plant.style.left = `${leftPos}%`;
+                    
+                    // Set plant icon and text based on type
+                    let iconClass, text;
+                    switch(type) {
+                        case 'seedling':
+                            iconClass = 'fas fa-seedling';
+                            text = 'Hope';
+                            break;
+                        case 'heart':
+                            iconClass = 'fas fa-heart';
+                            text = 'Love';
+                            break;
+                        case 'smile':
+                            iconClass = 'fas fa-smile';
+                            text = 'Joy';
+                            break;
+                        case 'sun':
+                            iconClass = 'fas fa-sun';
+                            text = 'Positivity';
+                            break;
+                        case 'star':
+                            iconClass = 'fas fa-star';
+                            text = 'Dreams';
+                            break;
+                        default:
+                            iconClass = 'fas fa-seedling';
+                            text = 'Hope';
+                    }
+                    
+                    plant.innerHTML = `
+                        <i class="${iconClass}"></i>
+                        <div class="plant-text">${text}</div>
+                    `;
+                    
+                    // Start small and transparent
+                    plant.style.transform = 'scale(0.5)';
+                    plant.style.opacity = '0.5';
+                    
+                    // Add to garden
+                    gardenContainer.appendChild(plant);
+                    
+                    // Grow on click
+                    plant.addEventListener('click', function() {
+                        this.style.transform = 'scale(1.2)';
+                        this.style.opacity = '1';
+                        
+                        // Increase score
+                        plantScore++;
+                        plantScoreElement.textContent = plantScore;
+                        
+                        // Show growth effect
+                        const growthEffect = document.createElement('div');
+                        growthEffect.innerHTML = '+1';
+                        growthEffect.style.position = 'absolute';
+                        growthEffect.style.left = `${leftPos}%`;
+                        growthEffect.style.bottom = '130px';
+                        growthEffect.style.color = '#43cea2';
+                        growthEffect.style.fontWeight = 'bold';
+                        growthEffect.style.fontSize = '1.2rem';
+                        growthEffect.style.textShadow = '0 2px 4px rgba(0, 0, 0, 0.3)';
+                        growthEffect.style.animation = 'floatUp 1.5s ease forwards';
+                        
+                        gardenContainer.appendChild(growthEffect);
+                        
+                        setTimeout(() => {
+                            gardenContainer.removeChild(growthEffect);
+                        }, 1500);
+                        
+                        // Return to normal size after a moment
+                        setTimeout(() => {
+                            this.style.transform = 'scale(1)';
+                        }, 300);
+                    });
+                    
+                    // Animate plant growing
+                    setTimeout(() => {
+                        plant.style.transform = 'scale(1)';
+                        plant.style.opacity = '1';
+                    }, 100);
+                }
+                
+                // Add a few initial plants
+                addPlantToGarden('seedling');
+                addPlantToGarden('heart');
+                addPlantToGarden('smile');
+                plantCount = 3;
+            }
+            
+            // Breath Harmony Game
+            function initBreathHarmonyGame() {
+                const breathCircle = document.getElementById('breathCircle');
+                let breathPhase = 0; // 0: inhale, 1: hold, 2: exhale
+                
+                // Reset circle
+                breathCircle.style.transform = 'scale(0.8)';
+                breathCircle.style.backgroundColor = '#43cea2';
+                breathCircle.textContent = 'Breathe IN';
+                
+                // Start breathing animation
+                const breathCycle = setInterval(() => {
+                    if (document.getElementById('breathHarmonyScreen').style.display !== 'flex') {
+                        clearInterval(breathCycle);
+                        return;
+                    }
+                    
+                    if (breathPhase === 0) {
+                        // Inhale
+                        breathCircle.style.transform = 'scale(1.5)';
+                        breathCircle.style.backgroundColor = '#43cea2';
+                        breathCircle.textContent = 'Breathe IN';
+                        breathPhase = 1;
+                    } else if (breathPhase === 1) {
+                        // Hold
+                        breathCircle.textContent = 'Hold';
+                        breathPhase = 2;
+                    } else {
+                        // Exhale
+                        breathCircle.style.transform = 'scale(0.8)';
+                        breathCircle.style.backgroundColor = '#185a9d';
+                        breathCircle.textContent = 'Breathe OUT';
+                        breathPhase = 0;
+                    }
+                }, 4000);
+            }
+            
+            // Initialize the first game for demonstration
+            initBreakObjectsGame();
+            
+            // Add CSS for floatUp animation
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes floatUp {
+                    0% { 
+                        transform: translateY(0);
+                        opacity: 1;
+                    }
+                    100% { 
+                        transform: translateY(-50px);
+                        opacity: 0;
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+        });
+    </script>
+</body>
+</html>

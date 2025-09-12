@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EaseBot - Your AI Companion</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #a8edea, #fed6e3);
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 90vh;
+        }
+        
+        header {
+            background: linear-gradient(to right, #a8edea, #fed6e3);
+            color: black;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 5px;
+            font-weight: 700;
+        }
+        
+        .tagline {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+        
+        .status {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+        
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: #43cea2;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        
+        .chat-container {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+        }
+        
+        .sidebar {
+            width: 250px;
+            background: rgba(250, 245, 255, 0.3);
+            padding: 20px;
+            border-right: 1px solid rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .response-mode {
+            margin-bottom: 30px;
+        }
+        
+        .mode-title {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #6e8efb;
+            display: flex;
+            align-items: center;
+        }
+        
+        .mode-title i {
+            margin-right: 8px;
+            font-size: 1.2rem;
+        }
+        
+        .mode-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .mode-btn {
+            padding: 8px 12px;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 18px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .mode-btn.active {
+            background: #c3bef0;
+            color: #333;
+            border-color: #c3bef0;
+        }
+        
+        .mode-btn:hover {
+            background: #d7c3f3;
+            color: #333;
+            border-color: #a777e3;
+        }
+        
+        .quick-replies {
+            margin-bottom: 30px;
+        }
+        
+        .quick-btn {
+            display: block;
+            width: 100%;
+            text-align: left;
+            padding: 10px 15px;
+            margin-bottom: 8px;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .quick-btn:hover {
+            background: #d7c3f3;
+            color: #333;
+            border-color: #6e8efb;
+        }
+        
+        .settings {
+            margin-top: auto;
+        }
+        
+        .chat-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .message {
+            max-width: 70%;
+            padding: 12px 16px;
+            margin-bottom: 15px;
+            border-radius: 18px;
+            line-height: 1.5;
+            position: relative;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .bot-message {
+            align-self: flex-start;
+            background: #e3f6f5;
+            border-bottom-left-radius: 4px;
+            color: #333;
+        }
+        
+        .user-message {
+            align-self: flex-end;
+            background: #c3bef0;
+            color: #333;
+            border-bottom-right-radius: 4px;
+        }
+        
+        .chat-input {
+            padding: 15px 20px;
+            border-top: 1px solid #eee;
+            display: flex;
+            align-items: center;
+        }
+        
+        .chat-input input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            font-size: 1rem;
+            outline: none;
+        }
+        
+        .chat-input input:focus {
+            border-color: #6e8efb;
+        }
+        
+        .send-btn {
+            background: #c3bef0;
+            color: #333;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-left: 10px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+        
+        .send-btn:hover {
+            background: #d7c3f3;
+            color: #333;
+            transform: scale(1.05);
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 15px;
+            color: rgba(0, 0, 0, 0.6);
+            font-size: 0.85rem;
+            border-top: 1px solid #eee;
+            background: rgba(255, 255, 255, 0.5);
+        }
+        
+        .footer a {
+            color: #6e8efb;
+            text-decoration: none;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                height: 95vh;
+            }
+            
+            .chat-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+                padding: 15px;
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 15px;
+            }
+            
+            .response-mode, .quick-replies, .settings {
+                flex: 1;
+                min-width: 45%;
+                margin-bottom: 15px;
+            }
+            
+            .message {
+                max-width: 85%;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .response-mode, .quick-replies, .settings {
+                min-width: 100%;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>EaseBot</h1>
+            <p class="tagline">Your AI Companion for Mental Wellness</p>
+            <div class="status">
+                <div class="status-dot"></div>
+                <span>Online • EaseBot v1.2</span>
+            </div>
+        </header>
+        
+        <div class="chat-container">
+            <div class="sidebar">
+                <div class="response-mode">
+                    <div class="mode-title"><i class="fas fa-robot"></i> Response Mode</div>
+                    <div class="mode-buttons">
+                        <button class="mode-btn active">Friendly</button>
+                        <button class="mode-btn">Creative</button>
+                    </div>
+                </div>
+                
+                <div class="quick-replies">
+                    <div class="mode-title"><i class="fas fa-bolt"></i> Quick Replies</div>
+                    <button class="quick-btn">Tell me a fun fact</button>
+                    <button class="quick-btn">I'm feeling anxious today</button>
+                    <button class="quick-btn">Share a motivational quote</button>
+                    <button class="quick-btn">Recommend a mindfulness exercise</button>
+                    <button class="quick-btn">Tell me a joke</button>
+                    <button class="quick-btn">I need help with something</button>
+                </div>
+                
+                <div class="settings">
+                    <div class="mode-title"><i class="fas fa-cog"></i> Settings</div>
+                    <button class="quick-btn">Clear Conversation</button>
+                    <button class="quick-btn">Enable Text-to-Speech</button>
+                    <button class="quick-btn">Change Theme</button>
+                </div>
+            </div>
+            
+            <div class="chat-main">
+                <div class="chat-messages" id="chatMessages">
+                    <div class="message bot-message">
+                        Hey there! 👋 I'm EaseBot, your AI companion. I'm here to chat, help, or just listen. What's on your mind today?
+                    </div>
+                </div>
+                
+                <div class="chat-input">
+                    <input type="text" id="userInput" placeholder="Type your message here...">
+                    <button class="send-btn" id="sendButton">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Your conversations stay private • Powered by AI • Made with ❤️</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const chatMessages = document.getElementById('chatMessages');
+            const userInput = document.getElementById('userInput');
+            const sendButton = document.getElementById('sendButton');
+            const quickReplies = document.querySelectorAll('.quick-btn');
+            
+            // Add initial bot message
+            addBotMessage("Hey there! 👋 I'm EaseBot, your AI companion. I'm here to chat, help, or just listen. What's on your mind today?");
+            
+            // Send message on button click
+            sendButton.addEventListener('click', sendMessage);
+            
+            // Send message on Enter key
+            userInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+            
+            // Quick reply buttons
+            quickReplies.forEach(button => {
+                button.addEventListener('click', function() {
+                    const text = this.textContent;
+                    addUserMessage(text);
+                    userInput.value = '';
+                    setTimeout(() => generateResponse(text), 500);
+                });
+            });
+            
+            function sendMessage() {
+                const message = userInput.value.trim();
+                if (message) {
+                    addUserMessage(message);
+                    userInput.value = '';
+                    setTimeout(() => generateResponse(message), 500);
+                }
+            }
+            
+            function addUserMessage(text) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'message user-message';
+                messageDiv.textContent = text;
+                chatMessages.appendChild(messageDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+            
+            function addBotMessage(text) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'message bot-message';
+                messageDiv.textContent = text;
+                chatMessages.appendChild(messageDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+            
+            function generateResponse(userMessage) {
+                userMessage = userMessage.toLowerCase();
+                let response = "";
+                
+                // Check for positive feelings
+                if (userMessage.includes("feeling great") || userMessage.includes("😎")) {
+                    response = "That's awesome! 😎 It's wonderful to feel on top of the world. What's making you feel so great today?";
+                }
+                else if (userMessage.includes("cloud nine") || userMessage.includes("☁️")) {
+                    response = "Floating on cloud nine! ☁️✨ That's such a beautiful feeling. Enjoy every moment of it!";
+                }
+                else if (userMessage.includes("vibin") || userMessage.includes("💖")) {
+                    response = "Good vibes only! 💖 I'm loving your positive energy. What's putting you in such a great mood?";
+                }
+                else if (userMessage.includes("living my best life") || userMessage.includes("😌")) {
+                    response = "Living your best life! 😌 That's what it's all about. You deserve this happiness!";
+                }
+                else if (userMessage.includes("mood: happy") || userMessage.includes("😁")) {
+                    response = "Happy mood! 😁 That's fantastic to hear. Happiness looks good on you!";
+                }
+                else if (userMessage.includes("super pumped") || userMessage.includes("pumped")) {
+                    response = "Pumped up! 🎉 That energy is contagious! What's got you so excited?";
+                }
+                else if (userMessage.includes("content and chill")) {
+                    response = "Content and chill - what a perfect state to be in! 🍃 Enjoy this peaceful moment.";
+                }
+                else if (userMessage.includes("smiling from ear to ear")) {
+                    response = "I can practically see that beautiful smile! 😊 What's bringing you so much joy?";
+                }
+                else if (userMessage.includes("happy or thrilled") || userMessage.includes("excited") || userMessage.includes("thrilled")) {
+                    response = "That's wonderful to hear! 😊 Enjoy these positive feelings. Is there something specific that's making you feel this way?";
+                }
+                else if (userMessage.includes("great") || userMessage.includes("fantastic") || userMessage.includes("on top of the world")) {
+                    response = "I'm so glad you're feeling amazing! 🌟 You deserve to feel this good. Want to share what's contributing to these great feelings?";
+                }
+                else if (userMessage.includes("relaxed") || userMessage.includes("calm") || userMessage.includes("at peace")) {
+                    response = "It's wonderful that you're feeling peaceful and relaxed. 🧘‍♂️ These moments of calm are so important for our wellbeing.";
+                }
+                else if (userMessage.includes("proud") || userMessage.includes("accomplished")) {
+                    response = "You should feel proud! 🏆 Celebrating our accomplishments, big or small, is so important. What have you achieved recently?";
+                }
+                else if (userMessage.includes("grateful") || userMessage.includes("blessed") || userMessage.includes("lucky")) {
+                    response = "Practicing gratitude is such a powerful way to boost happiness! 🙏 Would you like to share what you're feeling grateful for today?";
+                }
+                
+                // Check for neutral/meh feelings
+                else if (userMessage.includes("meh") || userMessage.includes("🤷")) {
+                    response = "Meh days happen to everyone. 🤷‍♀️ Sometimes our emotions just need a little time to figure themselves out.";
+                }
+                else if (userMessage.includes("just here") || userMessage.includes("🫠")) {
+                    response = "Just being here is enough sometimes. 🫠 Would you like to talk about what's on your mind, or would you prefer a distraction?";
+                }
+                else if (userMessage.includes("feeling kinda off or hate") || userMessage.includes("I am not feeling myself today")) {
+                    response = "It's okay to feel a little off sometimes. 😶 Our emotions don't always have to make sense. Want to explore what might be causing this feeling?";
+                }
+                else if (userMessage.includes("same old") || userMessage.includes("🙃")) {
+                    response = "The routine can get monotonous sometimes. 🙃 Maybe we could brainstorm something new to try to mix things up?";
+                }
+                else if (userMessage.includes("blah") || userMessage.includes("😐")) {
+                    response = "Blah days are the worst. 😐 Sometimes just acknowledging the feeling can help it pass. I'm here if you want to talk about it.";
+                }
+                else if (userMessage.includes("nothing much") || userMessage.includes("i'm fine")) {
+                    response = "It's okay to have neutral days. 🌤️ Sometimes our emotions are just in the middle. Is there anything that might help you feel even a little better?";
+                }
+                else if (userMessage.includes("neutral vibes")) {
+                    response = "Neutral vibes are still valid vibes. 💭 Sometimes our emotions need to rest in the middle before moving anywhere else.";
+                }
+                else if (userMessage.includes("okay") || userMessage.includes("fine") || userMessage.includes("so-so")) {
+                    response = "It's okay to have neutral days. 🌤️ Sometimes our emotions are just in the middle. Is there anything that might help you feel even a little better?";
+                }
+                else if (userMessage.includes("tired") || userMessage.includes("worn out") || userMessage.includes("drained")) {
+                    response = "It sounds like you could use some rest. 💤 Remember that rest is productive too. Would a short break or some self-care help?";
+                }
+                else if (userMessage.includes("confused") || userMessage.includes("unsure") || userMessage.includes("conflicted")) {
+                    response = "It's completely normal to feel confused or unsure sometimes. 🤔 Would talking through your thoughts help provide some clarity?";
+                }
+                else if (userMessage.includes("curious") || userMessage.includes("intrigued") || userMessage.includes("interested")) {
+                    response = "Curiosity is a beautiful quality! 🌟 What has captured your interest? I'd love to explore it with you.";
+                }
+                
+                // Check for sad/down feelings
+                else if (userMessage.includes("lowkey sad") || userMessage.includes("😔")) {
+                    response = "I'm sorry you're feeling lowkey sad. 😔 Sometimes these subtle feelings need the most attention. Want to talk about it?";
+                }
+                else if (userMessage.includes("big sad") || userMessage.includes("😢")) {
+                    response = "The big sad can feel overwhelming. 😢 I'm here for you. Would you like to share what's going on?";
+                }
+                else if (userMessage.includes("mood: tired and sad") || userMessage.includes("🫥")) {
+                    response = "Tired and sad is such a heavy combination. 🫥 You're carrying a lot. Can I help lighten the load somehow?";
+                }
+                else if (userMessage.includes("feeling down today") || userMessage.includes("💔")) {
+                    response = "I'm sorry today is feeling heavy. 💔 Remember that this feeling is temporary, even if it doesn't feel that way right now.";
+                }
+                else if (userMessage.includes("not my day") || userMessage.includes("😞")) {
+                    response = "Some days just don't go our way. 😞 Tomorrow is a new opportunity. What's been challenging about today?";
+                }
+                else if (userMessage.includes("heartbroken") || userMessage.includes("💔")) {
+                    response = "Heartbreak is one of the most painful feelings. 💔 Be gentle with yourself as you heal. It's okay to not be okay.";
+                }
+                else if (userMessage.includes("feeling blue")) {
+                    response = "Feeling blue can color everything else. 💙 These feelings will pass, even if it doesn't feel like it right now.";
+                }
+                else if (userMessage.includes("melancholy")) {
+                    response = "Melancholy has its own unique weight. 🍂 Sometimes sitting with these feelings helps us understand ourselves better.";
+                }
+                else if (userMessage.includes("sad") || userMessage.includes("upset") || userMessage.includes("down")) {
+                    response = "I'm sorry you're feeling down. 💙 It's okay to feel sad sometimes. Would you like to talk about what's bothering you?";
+                }
+                
+                // Check for anxious/stressed feelings
+                else if (userMessage.includes("so stressed rn") || userMessage.includes("😩")) {
+                    response = "Stress can feel absolutely overwhelming. 😩 Let's try a quick grounding exercise together. Ready?";
+                }
+                else if (userMessage.includes("brain.exe has stopped working") || userMessage.includes("🫣")) {
+                    response = "When your brain feels like it's buffering... 🫣 Let's give it a moment to reset. Want to try a breathing exercise?";
+                }
+                else if (userMessage.includes("anxiety hitting hard") || userMessage.includes("😬")) {
+                    response = "Anxiety can hit like a wave. 😬 Let's ride it out together. I'm here with you.";
+                }
+                else if (userMessage.includes("overthinking everything") || userMessage.includes("🫠")) {
+                    response = "The overthinking spiral is so real. 🫠 Let's try to break the cycle together. What's one thing you know for certain right now?";
+                }
+                else if (userMessage.includes("help") || userMessage.includes("😭")) {
+                    response = "I hear you asking for help. 😭 That takes courage. I'm here with you. What do you need most right now?";
+                }
+                else if (userMessage.includes("tense and restless") || userMessage.includes("nervous vibes")) {
+                    response = "That tense, restless feeling is so uncomfortable. 🌪️ Let's try to release some of that energy together.";
+                }
+                else if (userMessage.includes("freaking out internally")) {
+                    response = "Internal freakouts can be so overwhelming. 😥 I'm here to help you through this. Let's take some deep breaths together.";
+                }
+                else if (userMessage.includes("anxious") || userMessage.includes("stressed") || userMessage.includes("overwhelmed")) {
+                    response = "I understand anxiety can be really challenging. 🧘 Let's try a quick breathing exercise: Breathe in for 4 seconds, hold for 4, and exhale for 6. Repeat 3 times. Would that help?";
+                }
+                
+                // Check for angry/frustrated feelings
+                else if (userMessage.includes("this is so frustrating") || userMessage.includes("😤")) {
+                    response = "Frustration is so valid when things aren't working as they should. 😤 Want to vent about what's frustrating you?";
+                }
+                else if (userMessage.includes("why me") || userMessage.includes("😡")) {
+                    response = "That 'why me' feeling can be so overwhelming. 😡 It's okay to feel angry about unfair situations.";
+                }
+                else if (
+                    userMessage.includes("raging inside") || 
+                    userMessage.includes("kill") || 
+                    userMessage.includes("murder") || 
+                    userMessage.includes("hate") || 
+                    userMessage.includes("suicide") || 
+                    userMessage.includes("🔥")
+) {
+                    response = "I hear you. It sounds like you’re carrying a lot of pain and anger right now. Hurting yourself or others won’t take away the pain — you deserve support that can help you through this.";
+                }
+                else if (userMessage.includes("big yikes") || userMessage.includes("😠")) {
+                    response = "Big yikes moments can trigger big feelings. 😠 It's completely understandable to be upset.";
+                }
+                else if (userMessage.includes("can't even rn") || userMessage.includes("😑")) {
+                    response = "Sometimes we just 'can't even' and that's valid. 😑 Would you like to talk about what's brought you to this point?";
+                }
+                else if (userMessage.includes("irritated beyond words") || userMessage.includes("mood: mad") || userMessage.includes("fuming")) {
+                    response = "When irritation reaches that level, it's really intense. 💢 Let's find a healthy way to process these feelings.";
+                }
+                else if (userMessage.includes("frustrated") || userMessage.includes("annoyed") || userMessage.includes("irritated")) {
+                    response = "Frustration is completely valid. 💢 Sometimes things don't go as we'd like. Would venting about it help you process these feelings?";
+                }
+                else if (userMessage.includes("lonely") || userMessage.includes("rejected") || userMessage.includes("misunderstood")) {
+                    response = "I'm sorry you're feeling lonely or misunderstood. 🤗 Remember that your feelings are valid, and I'm here to listen without judgment.";
+                }
+                else if (userMessage.includes("angry") || userMessage.includes("mad") || userMessage.includes("furious")) {
+                    response = "Anger is a natural emotion, though it can feel uncomfortable. 🔥 Would you like to try some healthy ways to process these feelings?";
+                }
+                
+                // Check for subtle/indirect expressions
+                else if (userMessage.includes("not feeling myself") || userMessage.includes("off") || userMessage.includes("under the weather")) {
+                    response = "It's okay to have days when you don't feel like yourself. 🌧️ Would talking about it or maybe a distraction help?";
+                }
+                else if (userMessage.includes("mixed feelings")) {
+                    response = "Mixed feelings are completely normal when situations are complex. 🌈 Would exploring the different aspects help provide clarity?";
+                }
+                else if (userMessage.includes("in a mood")) {
+                    response = "We all have those days where we're 'in a mood.' 🌫️ Would you like to talk about it or would you prefer some space?";
+                }
+                
+                // Check for other common phrases
+                else if (userMessage.includes("not feeling good") || 
+                    userMessage.includes("not well") || 
+                    userMessage.includes("not feeling well") || 
+                    userMessage.includes("hurt") || 
+                    userMessage.includes("feeling down")) {
+                    response = "I'm sorry to hear you're not feeling your best. 💙 Remember that it's okay to have difficult days. Would you like to talk about what's bothering you, or would you prefer a distraction?";
+                }
+                else if (userMessage.includes("fun fact")) {
+                    response = "Did you know that otters hold hands while sleeping so they don't drift away from each other? 🦦 How cute is that!";
+                }
+                else if (userMessage.includes("quote") || userMessage.includes("motivational")) {
+                    const quotes = [
+                        "The only way to do great work is to love what you do. - Steve Jobs",
+                        "You are enough just as you are. - Meghan Markle",
+                        "Your present circumstances don't determine where you can go; they merely determine where you start. - Nido Qubein",
+                        "It's during our darkest moments that we must focus to see the light. - Aristotle",
+                        "This too shall pass. - Persian adage",
+                        "You can't calm the storm, but you can calm yourself. - Unknown",
+                        "Your feelings are valid, even when they're uncomfortable. - Unknown"
+                    ];
+                    response = quotes[Math.floor(Math.random() * quotes.length)];
+                }
+                else if (userMessage.includes("exercise") || userMessage.includes("mindfulness")) {
+                    response = "Try the 5-4-3-2-1 grounding technique: Notice 5 things you can see, 4 things you can feel, 3 things you can hear, 2 things you can smell, and 1 thing you can taste. This can help bring you into the present moment. 🍃";
+                }
+                else if (userMessage.includes("joke")) {
+                    const jokes = [
+                        "Why don't scientists trust atoms? Because they make up everything!",
+                        "What do you call a fake noodle? An impasta!",
+                        "Why did the scarecrow win an award? Because he was outstanding in his field!",
+                        "What's the best thing about Switzerland? I don't know, but the flag is a big plus!",
+                        "Why don't eggs tell jokes? They'd crack each other up!",
+                        "What do you call a dinosaur that crashes his car? Tyrannosaurus Wrecks!"
+                    ];
+                    response = jokes[Math.floor(Math.random() * jokes.length)] + " 😄";
+                }
+                else if (userMessage.includes("help")) {
+                    response = "I'm here to help! 💪 You can ask me for resources, talk about what's troubling you, or we can try some exercises together. What do you need help with specifically?";
+                }
+                else if (userMessage.includes("thank")) {
+                    response = "You're very welcome! 😊 I'm always here when you need me.";
+                }
+                else if (userMessage.includes("hello") || userMessage.includes("hi") || userMessage.includes("hey")) {
+                    response = "Hello there! 👋 How are you feeling today?";
+                }
+                else if (userMessage.includes("how are you")) {
+                    response = "I'm here and ready to support you! 💙 How are you feeling today?";
+                }
+                else if (userMessage.includes("what can you do")) {
+                    response = "I can chat with you, provide emotional support, share resources, recommend exercises, tell jokes, and more! What would you like to try?";
+                }
+                else {
+                    // Default empathetic response for other messages
+                    response = "Thanks for sharing. 💬 I'm listening. Would you like to talk more about that, or would you prefer we change the subject?";
+                }
+                
+                addBotMessage(response);
+            }
+        });
+    </script>
+</body>
+</html>

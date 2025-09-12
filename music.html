@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music for Your Mood - MindSoothe</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        :root {
+            --primary: #1a2a6c;
+            --secondary: #b21f1f;
+            --accent: #fdbb2d;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --muted: #6c757d;
+            --radius: 12px;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            --transition: all 0.3s ease;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+        
+        .page-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .page-title {
+            font-size: 3.5rem;
+            margin-bottom: 15px;
+            font-weight: 800;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            color: white;
+        }
+        
+        .page-tagline {
+            font-size: 1.5rem;
+            opacity: 0.9;
+            font-weight: 300;
+            max-width: 800px;
+            margin: 0 auto;
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            background: rgba(26, 42, 108, 0.25);
+            backdrop-filter: blur(10px);
+            border-radius: 25px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        /* Navigation */
+        .nav-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+        
+        .nav-pills {
+            display: flex;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 50px;
+            padding: 5px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .nav-pill {
+            padding: 12px 25px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .nav-pill.active {
+            background: linear-gradient(to right, #ff7e5f, #feb47b);
+            color: white;
+            box-shadow: 0 5px 15px rgba(255, 126, 95, 0.4);
+        }
+        
+        /* Page Styles */
+        .page {
+            display: none;
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
+        .page-subtitle {
+            text-align: center;
+            margin-bottom: 50px;
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.9);
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+        }
+        
+        /* Music Page Styles */
+        .music-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .music-filters {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+
+        .music-filter {
+            padding: 12px 25px;
+            border-radius: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+        }
+
+        .music-filter.active, .music-filter:hover {
+            background: linear-gradient(to right, #ff7e5f, #feb47b);
+            border-color: transparent;
+            box-shadow: 0 5px 15px rgba(255, 126, 95, 0.4);
+        }
+
+        .music-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .music-card {
+            background: rgba(253, 187, 45, 0.15); 
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .music-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .music-image {
+            height: 200px;
+            overflow: hidden;
+        }
+
+        .music-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .music-card:hover .music-image img {
+            transform: scale(1.1);
+        }
+
+        .music-content {
+            padding: 25px;
+        }
+
+        .music-content h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: #ffffff;
+        }
+
+        .music-artist {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .music-artist i {
+            color: #ffb347;
+        }
+
+        .music-player {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: var(--radius);
+        }
+
+        .music-player audio {
+            flex-grow: 1;
+            height: 40px;
+            outline: none;
+            border-radius: 30px;
+        }
+
+        audio::-webkit-media-controls-panel {
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .music-duration {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.8);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        /* Mood Description Section */
+        .mood-description {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius);
+            padding: 40px;
+            margin: 50px 0;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .mood-description h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2rem;
+            color: white;
+        }
+        
+        .mood-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+        }
+        
+        .mood-item {
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .mood-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: #ffb347;
+        }
+        
+        .mood-item h3 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+           color: #ffffff; 
+        }
+        
+        .mood-item p {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .music-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-pills {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .music-filters {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .music-filter {
+                width: 100%;
+                text-align: center;
+            }
+            
+            .page-title {
+                font-size: 2.5rem;
+            }
+            
+            .page-tagline {
+                font-size: 1.2rem;
+                padding: 0 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Page Header (Outside Container) -->
+    <div class="page-header">
+        <h1 class="page-title">Music for Your Mood</h1>
+        <p class="page-tagline">Curated playlists to match your emotional state and help you find balance, focus, or relaxation</p>
+    </div>
+    
+    <!-- Container for the rest of the content -->
+    <div class="container">
+        <div class="content">
+            <div class="nav-container">
+                <div class="nav-pills">
+                    <div class="nav-pill active" data-page="music">Music</div>
+                </div>
+            </div>
+            
+            <!-- Music Page -->
+            <section id="music" class="page active">
+                <p class="page-subtitle">Select music based on your current emotional needs or desired state of mind</p>
+                
+                <div class="music-filters">
+                    <button class="music-filter active" data-filter="all">All</button>
+                    <button class="music-filter" data-filter="calm">Calm</button>
+                    <button class="music-filter" data-filter="focus">Focus</button>
+                    <button class="music-filter" data-filter="energy">Energy</button>
+                    <button class="music-filter" data-filter="sleep">Sleep</button>
+                    <button class="music-filter" data-filter="happy">Happy</button>
+                </div>
+                
+                <div class="music-grid">
+                    <div class="music-card" data-category="calm">
+                        <div class="music-image">
+                            <img src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Calming music">
+                        </div>
+                        <div class="music-content">
+                            <h3>Peaceful Piano</h3>
+                            <p class="music-artist"><i class="fas fa-user"></i> Ludovico Einaudi</p>
+                            <p>Soothing piano melodies to calm your mind and reduce anxiety</p>
+                            <div class="music-player">
+                                <audio controls>
+                                    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3" type="audio/mpeg">
+                                </audio>
+                                <span class="music-duration"><i class="fas fa-clock"></i> 15:00</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="music-card" data-category="happy">
+                        <div class="music-image">
+                            <img src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="People laughing">
+                        </div>
+                        <div class="music-content">
+                            <h3>Happy Moments</h3>
+                            <p class="music-artist"><i class="fas fa-user"></i> Various Artists</p>
+                            <p>Upbeat tracks to boost your mood and increase positive emotions</p>
+                            <div class="music-player">
+                                <audio controls>
+                                    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3" type="audio/mpeg">
+                                </audio>
+                                <span class="music-duration"><i class="fas fa-clock"></i> 12:00</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="music-card" data-category="calm">
+                        <div class="music-image">
+                            <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Calm ocean scene">
+                        </div>
+                        <div class="music-content">
+                            <h3>Ocean Serenity</h3>
+                            <p class="music-artist"><i class="fas fa-user"></i> Nature Sounds</p>
+                            <p>Gentle ocean waves combined with soft ambient music for deep relaxation</p>
+                            <div class="music-player">
+                                <audio controls>
+                                    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+                                </audio>
+                                <span class="music-duration"><i class="fas fa-clock"></i> 30:00</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="music-card" data-category="focus">
+                        <div class="music-image">
+                            <img src="https://images.unsplash.com/photo-1511379938547-c1f69419868d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Focus music">
+                        </div>
+                        <div class="music-content">
+                            <h3>Deep Concentration</h3>
+                            <p class="music-artist"><i class="fas fa-user"></i> Brian Eno</p>
+                            <p>Ambient sounds designed to enhance focus and productivity</p>
+                            <div class="music-player">
+                                <audio controls>
+                                    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3" type="audio/mpeg">
+                                </audio>
+                                <span class="music-duration"><i class="fas fa-clock"></i> 45:00</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="music-card" data-category="energy">
+                        <div class="music-image">
+                            <img src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Energy music">
+                        </div>
+                        <div class="music-content">
+                            <h3>Morning Motivation</h3>
+                            <p class="music-artist"><i class="fas fa-user"></i> Pharrell Williams</p>
+                            <p>Energetic tracks to boost your mood and increase motivation</p>
+                            <div class="music-player">
+                                <audio controls>
+                                    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3" type="audio/mpeg">
+                                </audio>
+                                <span class="music-duration"><i class="fas fa-clock"></i> 20:00</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="music-card" data-category="sleep">
+                        <div class="music-image">
+                            <img src="https://images.unsplash.com/photo-1531353826977-0941b4779a1c?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Sleep music">
+                        </div>
+                        <div class="music-content">
+                            <h3>Deep Sleep</h3>
+                            <p class="music-artist"><i class="fas fa-user"></i> Marconi Union</p>
+                            <p>Gentle, slow compositions scientifically designed to promote restful sleep</p>
+                            <div class="music-player">
+                                <audio controls>
+                                    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3" type="audio/mpeg">
+                                </audio>
+                                <span class="music-duration"><i class="fas fa-clock"></i> 60:00</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Mood Description Section -->
+                <div class="mood-description">
+                    <h2>How Music Affects Your Mood</h2>
+                    <div class="mood-grid">
+                        <div class="mood-item">
+                            <div class="mood-icon">
+                                <i class="fas fa-brain"></i>
+                            </div>
+                            <h3>Reduces Stress</h3>
+                            <p>Listening to calming music can lower cortisol levels, reducing stress and anxiety.</p>
+                        </div>
+                        <div class="mood-item">
+                            <div class="mood-icon">
+                                <i class="fas fa-heart"></i>
+                            </div>
+                            <h3>Improves Mood</h3>
+                            <p>Upbeat music can trigger the release of dopamine, creating feelings of happiness.</p>
+                        </div>
+                        <div class="mood-item">
+                            <div class="mood-icon">
+                                <i class="fas fa-lightbulb"></i>
+                            </div>
+                            <h3>Enhances Focus</h3>
+                            <p>Certain types of music can improve concentration and cognitive performance.</p>
+                        </div>
+                        <div class="mood-item">
+                            <div class="mood-icon">
+                                <i class="fas fa-bed"></i>
+                            </div>
+                            <h3>Promotes Sleep</h3>
+                            <p>Slow-tempo music can help regulate breathing and prepare your body for rest.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script>
+        // Filter functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const filters = document.querySelectorAll('.music-filter');
+            const musicCards = document.querySelectorAll('.music-card');
+            
+            filters.forEach(filter => {
+                filter.addEventListener('click', () => {
+                    // Remove active class from all filters
+                    filters.forEach(f => f.classList.remove('active'));
+                    
+                    // Add active class to clicked filter
+                    filter.classList.add('active');
+                    
+                    const filterValue = filter.getAttribute('data-filter');
+                    
+                    // Show/hide cards based on filter
+                    musicCards.forEach(card => {
+                        if (filterValue === 'all') {
+                            card.style.display = 'block';
+                        } else {
+                            if (card.getAttribute('data-category') === filterValue) {
+                                card.style.display = 'block';
+                            } else {
+                                card.style.display = 'none';
+                            }
+                        }
+                    });
+                });
+            });
+            
+            // Navigation functionality
+            const navPills = document.querySelectorAll('.nav-pill');
+            const pages = document.querySelectorAll('.page');
+            
+            navPills.forEach(pill => {
+                pill.addEventListener('click', () => {
+                    const targetPage = pill.getAttribute('data-page');
+                    
+                    // Remove active class from all pills and pages
+                    navPills.forEach(p => p.classList.remove('active'));
+                    pages.forEach(page => page.classList.remove('active'));
+                    
+                    // Add active class to clicked pill and corresponding page
+                    pill.classList.add('active');
+                    document.getElementById(targetPage).classList.add('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
