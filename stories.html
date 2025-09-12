@@ -291,7 +291,13 @@
         @media (max-width: 768px) {
             .stories-grid {
                 grid-template-columns: 1fr;
+                gap: 15px;
             }
+
+            .read-more-btn {
+        width: 100%;      /* makes button full-width */
+        text-align: center; /* centers the text */
+    }
             
             .modal-header {
                 padding: 30px 20px 15px;
@@ -309,6 +315,20 @@
                 height: 200px;
             }
         }
+        @media (max-width: 480px) {
+    .modal-title {
+        font-size: 1.5rem;
+    }
+    .modal-header-image {
+        height: 150px;
+    }
+    .story-content {
+        padding: 15px;
+    }
+    .stories-grid {
+        gap: 10px; /* even tighter spacing */
+    }
+}
         
         .section-title {
             text-align: center;
