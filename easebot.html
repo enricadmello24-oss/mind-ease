@@ -260,42 +260,136 @@
         @media (max-width: 768px) {
             .container {
                 height: 95vh;
+                flex-direction: column;
             }
             
             .chat-container {
                 flex-direction: column;
+                width: 100%;
+                height: 100%;
             }
+        
             
             .sidebar {
                 width: 100%;
                 border-right: none;
                 border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-                padding: 15px;
-                flex-direction: row;
-                flex-wrap: wrap;
-                gap: 15px;
+                padding: 10px;
+                flex-direction: column;
+                flex-wrap: nowrap;
+                gap: 10px;
+                max-height: 240px;
+                overflow-y: auto;
             }
             
-            .response-mode, .quick-replies, .settings {
-                flex: 1;
-                min-width: 45%;
-                margin-bottom: 15px;
-            }
-            
-            .message {
-                max-width: 85%;
-            }
-        }
-        
-        @media (max-width: 480px) {
             .response-mode, .quick-replies, .settings {
                 min-width: 100%;
+                margin-bottom: 10px;
             }
             
-            h1 {
-                font-size: 2rem;
-            }
-        }
+            .chat-main {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+    }
+
+    .chat-messages {
+        flex: 1;
+        overflow-y: auto;
+        padding: 10px;
+        min-height: 100px;
+    }
+
+    .chat-input {
+        padding: 10px;
+    }
+
+    .chat-input input {
+        font-size: 1rem;
+        padding: 10px;
+    }
+
+    .send-btn {
+        width: 40px;
+        height: 40px;
+    }
+
+    header h1 {
+        font-size: 2rem;
+    }
+
+    .tagline {
+        font-size: 1rem;
+    }
+}
+        
+        @media (max-width: 480px) {
+    .container {
+        height: 100vh; /* full viewport height */
+        padding: 10px;
+        flex-direction: column;
+    }
+
+    .chat-container {
+        flex-direction: column;
+        height: calc(100% - 120px); /* header + footer approx */
+    }
+
+    .sidebar {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid rgba(0,0,0,0.1);
+        padding: 10px;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        gap: 10px;
+        max-height: 200px; /* prevent it from taking too much space */
+        overflow-y: auto;
+    }
+
+    .response-mode, .quick-replies, .settings {
+        min-width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .chat-main {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        min-height: 0; /* critical for flex scroll */
+    }
+
+    .chat-messages {
+        flex: 1;
+        overflow-y: auto;
+        padding: 10px;
+        min-height: 100px;
+    }
+
+    .chat-input {
+        padding: 8px;
+    }
+
+    .chat-input input {
+        font-size: 0.9rem;
+        padding: 8px 10px;
+    }
+
+    .send-btn {
+        width: 35px;
+        height: 35px;
+    }
+
+    header h1 {
+        font-size: 1.8rem;
+    }
+
+    .tagline {
+        font-size: 0.9rem;
+    }
+}
+
     </style>
 </head>
 <body>
@@ -338,11 +432,7 @@
             </div>
             
             <div class="chat-main">
-                <div class="chat-messages" id="chatMessages">
-                    <div class="message bot-message">
-                        Hey there! 👋 I'm EaseBot, your AI companion. I'm here to chat, help, or just listen. What's on your mind today?
-                    </div>
-                </div>
+                <div class="chat-messages" id="chatMessages"></div>
                 
                 <div class="chat-input">
                     <input type="text" id="userInput" placeholder="Type your message here...">
@@ -415,10 +505,101 @@
             
             function generateResponse(userMessage) {
                 userMessage = userMessage.toLowerCase();
-                let response = "";
+                let response = ""; 
+            
+
+    // Greetings
+                if (userMessage.includes("hello") || userMessage.includes("hi") || userMessage.includes("hey")) {
+                    response = "Hello! I'm EaseBot. How can I help you today?";
+                } 
+                else if (userMessage.includes("how are you")) {
+                    response = "I’m doing great! 😊 How are you feeling?";
+                } 
+                else if (userMessage.includes("mindease") || userMessage.includes("about easebot")) {
+                    response = "MindEase is your all-in-one mental health platform. EaseBot is your companion here 💡";
+                }
+                else if (userMessage.includes("meditate") || userMessage.includes("relax")) {
+                    response = "Meditation can help reduce stress 🧘. Want me to guide you?";
+                } 
+                else if (userMessage.includes("bye") || userMessage.includes("goodbye")) {
+                    response = "Goodbye 👋! Remember, EaseBot is always here for you.";
+                } 
+                // Positive response to yes
+                else if (["yes","ye","yeah","yep","yup","sure","ok","okay"].some(word => userMessage.includes(word))) {
+                    response = "Okay, let's do that 😊. Also, don’t forget to explore our website 🌐 for more features!";
+                } 
+                // Negative response
+                else if (["no","nope","nah","not really","never"].some(word => userMessage.includes(word))) {
+                    response = "That’s okay 👍. You can always explore other features on our website 🌐 whenever you like!";
+                } 
+                // Default fallback
                 
-                // Check for positive feelings
-                if (userMessage.includes("feeling great") || userMessage.includes("😎")) {
+                else if (
+                    userMessage.includes("help me") || 
+                    userMessage.includes("need advice") || 
+                    userMessage.includes("what should i do") || 
+                    userMessage.includes("stuck") || 
+                    userMessage.includes("lost") || 
+                    userMessage.includes("can't understand") || 
+                    userMessage.includes("cannot understand") ||
+                    userMessage.includes("confused")
+            ) {
+                const options = [
+                    "Of course! 💡 Tell me a bit more so I can help.",
+                    "I’m here for you 🤗 What’s the main thing on your mind right now?"
+                ];
+                response = options[Math.floor(Math.random() * options.length)];
+            }
+
+        // Asking about EaseBot / MindEase
+                else if (
+                    userMessage.includes("what can you do") || 
+                    userMessage.includes("tell me about") || 
+                    userMessage.includes("how does this work") || 
+                    userMessage.includes("features") || 
+                    userMessage.includes("options") 
+                ) {
+                    const options = [
+                        "I can chat with you, share mindfulness exercises, tell jokes, give motivational quotes, and more! 🎉 What would you like to try first?",
+                        "MindEase combines music, meditation, journaling, and mini-games to help you feel better 💙 Explore the website for all features!"
+                    ];
+                    response = options[Math.floor(Math.random() * options.length)];
+                }
+
+                // Gratitude / Polite phrases
+                else if (
+                    userMessage.includes("thanks") || 
+                    userMessage.includes("thank you") || 
+                    userMessage.includes("thx") || 
+                    userMessage.includes("appreciate it") || 
+                    userMessage.includes("you’re helpful")
+                ) {
+                    response = "You’re welcome! 😊 I’m always here when you need me.";
+                }
+
+        // Fun / entertainment requests
+
+                else if (userMessage.includes("music") || userMessage.includes("song") || userMessage.includes("playlist")) {
+                    response = "Check out the website for music playlist 🎶 to relax your mind.";
+                }
+                else if (userMessage.includes("game") || userMessage.includes("play")) {
+                    response = "Let's play a fun mini-game! 🎮 Check out the website for options!";
+                }
+
+                else if (
+                    userMessage.includes("mindfulness") || 
+                    userMessage.includes("relax") || 
+                    userMessage.includes("meditation") || 
+                    userMessage.includes("calm") || 
+                    userMessage.includes("breathing exercise")
+                ) {
+                    const options = [
+                        "Try this: Breathe in for 4 seconds, hold 4, exhale 6. Repeat 3 times 🧘‍♂️ Feel better?",
+                        "Would you like a short guided meditation or a fun mini-game to distract your mind?"
+                    ];
+                    response = options[Math.floor(Math.random() * options.length)];
+                }
+                else if (userMessage.includes("feeling great") || userMessage.includes("😎")) {
                     response = "That's awesome! 😎 It's wonderful to feel on top of the world. What's making you feel so great today?";
                 }
                 else if (userMessage.includes("cloud nine") || userMessage.includes("☁️")) {
@@ -561,6 +742,8 @@
                     userMessage.includes("murder") || 
                     userMessage.includes("hate") || 
                     userMessage.includes("suicide") || 
+                    userMessage.includes("cry") || 
+                    userMessage.includes("slap") ||
                     userMessage.includes("🔥")
 ) {
                     response = "I hear you. It sounds like you’re carrying a lot of pain and anger right now. Hurting yourself or others won’t take away the pain — you deserve support that can help you through this.";
@@ -585,7 +768,7 @@
                 }
                 
                 // Check for subtle/indirect expressions
-                else if (userMessage.includes("not feeling myself") || userMessage.includes("off") || userMessage.includes("under the weather")) {
+                else if (userMessage.includes("not feeling myself") || userMessage.includes("off") ||userMessage.includes("messed up") || userMessage.includes("under the weather")) {
                     response = "It's okay to have days when you don't feel like yourself. 🌧️ Would talking about it or maybe a distraction help?";
                 }
                 else if (userMessage.includes("mixed feelings")) {
@@ -594,7 +777,10 @@
                 else if (userMessage.includes("in a mood")) {
                     response = "We all have those days where we're 'in a mood.' 🌫️ Would you like to talk about it or would you prefer some space?";
                 }
-                
+                else if (userMessage.includes("bored") || userMessage.includes("nothing to do")) {
+                     response = "Boredom can be tough 😴. Want me to suggest a fun activity or mindfulness game?";
+                }
+
                 // Check for other common phrases
                 else if (userMessage.includes("not feeling good") || 
                     userMessage.includes("not well") || 
@@ -618,7 +804,7 @@
                     ];
                     response = quotes[Math.floor(Math.random() * quotes.length)];
                 }
-                else if (userMessage.includes("exercise") || userMessage.includes("mindfulness")) {
+                else if (userMessage.includes("exercise")) {
                     response = "Try the 5-4-3-2-1 grounding technique: Notice 5 things you can see, 4 things you can feel, 3 things you can hear, 2 things you can smell, and 1 thing you can taste. This can help bring you into the present moment. 🍃";
                 }
                 else if (userMessage.includes("joke")) {
@@ -647,11 +833,33 @@
                 else if (userMessage.includes("what can you do")) {
                     response = "I can chat with you, provide emotional support, share resources, recommend exercises, tell jokes, and more! What would you like to try?";
                 }
+                // Add this block near the end of generateResponse(), before the final 'else'
+                else if (
+                userMessage.includes("yes") || userMessage.includes("ye") || 
+                userMessage.includes("yeah") || userMessage.includes("yep") || 
+                userMessage.includes("yup") || userMessage.includes("sure") || 
+                userMessage.includes("of course") || userMessage.includes("absolutely") || 
+                userMessage.includes("definitely") || userMessage.includes("ok") || 
+                userMessage.includes("okay") || userMessage.includes("sure thing") || 
+                userMessage.includes("sounds good") || userMessage.includes("why not") )
+                {
+                    response = "Okay, let's do that 😊. Also, don’t forget to explore our website 🌐 for more features!";
+                }
+
+                else if (
+                userMessage.includes("no") || userMessage.includes("nope") || 
+                userMessage.includes("nah") || userMessage.includes("not really") || 
+                userMessage.includes("never") || userMessage.includes("I don’t think so") || 
+                userMessage.includes("maybe later") || userMessage.includes("not now") || 
+                userMessage.includes("don’t want to") )
+                {
+                    response = "That’s okay 👍. You can always explore other features on our website 🌐 whenever you like!";
+                }
+
                 else {
                     // Default empathetic response for other messages
                     response = "Thanks for sharing. 💬 I'm listening. Would you like to talk more about that, or would you prefer we change the subject?";
                 }
-                
                 addBotMessage(response);
             }
         });
